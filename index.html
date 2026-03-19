@@ -107,7 +107,7 @@
         .date-info span { color: var(--red); font-size: 1.1rem; margin: 0 5px;}
 
         /* 八字排盘连动效 */
-        .bazi-layout { display: flex; flex-direction: row-reverse; justify-content: center; gap: 25px; margin-bottom: 40px; position: relative; z-index: 1;}
+        .bazi-layout { display: flex; flex-direction: row-reverse; justify-content: center; gap: 25px; margin-bottom: 30px; position: relative; z-index: 1;}
         .pillar-card { display: flex; flex-direction: column; align-items: center; opacity: 0; transform: translateY(20px); }
         .pillar-title { font-size: 0.75rem; color: var(--blue); margin-bottom: 15px; letter-spacing: 2px; writing-mode: vertical-rl; }
         .bazi-text { writing-mode: vertical-rl; text-orientation: upright; font-size: 2.4rem; font-weight: 400; color: var(--dark); letter-spacing: 10px; margin-bottom: 20px; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);}
@@ -116,12 +116,30 @@
 
         @keyframes pillarFade { to { opacity: 1; transform: translateY(0); } }
 
+        /* ====== 命局格局剖析区 (新增) ====== */
+        .geju-section { margin-top: 25px; position: relative; z-index: 1; }
+        .geju-header { text-align: center; margin-bottom: 20px; }
+        .geju-title { font-size: 1.1rem; color: var(--blue-dark); font-weight: 900; letter-spacing: 8px; margin-bottom: 8px; position: relative; display: inline-block;}
+        .geju-title::before, .geju-title::after { content: '·'; color: var(--gold); margin: 0 10px; }
+        .geju-daymaster { font-size: 0.95rem; color: var(--green); letter-spacing: 1px; font-weight: 600;}
+        
+        .geju-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+            border: 1px solid rgba(201, 160, 99, 0.4); border-radius: 12px; padding: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03); opacity: 0; transform: translateY(20px);
+        }
+        .geju-tags { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .g-tag { padding: 4px 12px; border-radius: 4px; font-size: 0.9rem; font-weight: 600; letter-spacing: 2px; }
+        .inner-tag { background: rgba(43, 122, 90, 0.1); color: var(--green); border: 1px solid rgba(43, 122, 90, 0.3); }
+        .outer-tag { background: rgba(201, 160, 99, 0.1); color: #B37D40; border: 1px solid rgba(201, 160, 99, 0.3); }
+        .geju-desc { font-family: var(--font-sans); font-size: 0.95rem; color: var(--dark); line-height: 1.8; text-align: justify; opacity: 0.9;}
+
         /* ====== 六十四卦高级排版区 ====== */
         .gua-section {
             position: relative; z-index: 1;
             background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
             border: 1px solid rgba(201, 160, 99, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            padding: 30px; border-radius: 12px; margin-top: 20px;
+            padding: 30px; border-radius: 12px; margin-top: 25px;
         }
         .gua-header { display: flex; align-items: center; gap: 25px; margin-bottom: 25px; border-bottom: 1px dashed rgba(201, 160, 99, 0.4); padding-bottom: 20px;}
         .gua-svg-box { width: 60px; flex-shrink: 0; }
@@ -170,6 +188,8 @@
             .input-group.full { grid-column: span 6; }
             .bazi-layout { gap: 10px; }
             .bazi-text { font-size: 1.8rem; }
+            .geju-tags { gap: 10px; }
+            .g-tag { font-size: 0.85rem; padding: 4px 8px;}
             .gua-header { flex-direction: column; text-align: center; }
             .gua-classical::before, .gua-classical::after { display: none; }
         }
@@ -261,6 +281,21 @@
                 </div>
             </div>
 
+            <!-- 新增：命局格局剖析区 -->
+            <div class="geju-section" id="geju-section" style="display: none;">
+                <div class="geju-header">
+                    <div class="geju-title">命 局 剖 析</div>
+                    <div class="geju-daymaster" id="geju-daymaster"></div>
+                </div>
+                <div class="geju-card" id="geju-card">
+                    <div class="geju-tags">
+                        <span class="g-tag inner-tag" id="geju-inner-tag"></span>
+                        <span class="g-tag outer-tag" id="geju-outer-tag"></span>
+                    </div>
+                    <div class="geju-desc" id="geju-desc"></div>
+                </div>
+            </div>
+
             <div class="gua-section" id="gua-section" style="display: none;">
                 <div class="gua-header">
                     <div class="gua-svg-box" id="gua-svg-box"></div>
@@ -285,6 +320,55 @@
     </div>
 
     <script>
+        // ====== 命理格局数据词典 (新增) ======
+        const dayMasterData = {
+            "甲": "日主为甲，属阳木。如参天大树，生机勃勃，刚直倔强，极具向上生长的力量。",
+            "乙": "日主为乙，属阴木。如花草藤蔓，柔软坚韧，极具适应力，能在逆境中蔓延逢生。",
+            "丙": "日主为丙，属阳火。如璀璨太阳，热情无私，光芒四射，能驱散阴霾充满活力。",
+            "丁": "日主为丁，属阴火。如星月炉火，内敛温和，洞察人心，能给人带来持久的温暖。",
+            "戊": "日主为戊，属阳土。如巍峨高山，稳重包容，诚实守信，是极佳的依靠与壁垒。",
+            "己": "日主为己，属阴土。如田园之土，滋养万物，心思细腻，承载力强，蕴含无限生机。",
+            "庚": "日主为庚，属阳金。如刀剑矿石，刚毅果断，重情重义，自带肃杀与开创之气。",
+            "辛": "日主为辛，属阴金。如珠玉宝石，精致温婉，追求完美，内心自带清高与高贵。",
+            "壬": "日主为壬，属阳水。如江河之水，奔流不息，气势磅礴，智商极高且豁达大度。",
+            "癸": "日主为癸，属阴水。如雨露甘霖，滋润无声，聪明灵动，具有极强的渗透力与直觉。"
+        };
+
+        const shishenData = {
+            "正官格": "贵气天成，秉公任直。具备极强的管理能力和道德底线，行事有度，适合在正规体制或大型企业中担任管理要职。人生信条是秩序与责任。",
+            "七杀格": "开拓进取，威风凛凛。极具魄力和执行力，能在逆境与混乱中杀出一条血路。带有极强的个人英雄主义色彩，适合创业或竞争激烈的行业。",
+            "正印格": "慈悲仁厚，思想深邃。天然带有书卷气，长辈缘极佳。重视精神世界的丰盈，淡泊名利，非常适合教育、文化、学术及公益领域。",
+            "偏印格": "领悟力强，特立独行。具有极高的艺术天赋、敏锐的直觉和第六感。不走寻常路，在偏门、宗教、设计或小众领域往往能取得惊人成就。",
+            "正财格": "勤俭踏实，按部就班。对金钱和资源有天生的敏感度，讲究一分耕耘一分收获。财富积累稳健，极其重视现实与安稳，适合金融与理财。",
+            "偏财格": "慷慨大方，眼光独到。擅长资源整合与风险投资，具有极强的商业头脑和交际能力。为人豪爽，一生常有意外之财，是天生的生意人。",
+            "伤官格": "才华横溢，桀骜不驯。思维极其活跃，敢于打破常规。极具个人魅力与表达欲，但也容易锋芒太露。适合演艺、设计、公关等创意行业。",
+            "食神格": "温文尔雅，懂得享受。自带福气与口福，性格宽厚，不喜欢激烈的争斗。一生相对安逸顺遂，适合从事文艺、美食、教育及服务业。",
+            "建禄格": "自强不息，脚踏实地。大多不靠祖业，全凭自己打拼。具有坚韧不拔的意志力和极强的自尊心，独立性极高，属于实干兴邦的类型。",
+            "羊刃格": "冲劲十足，义薄云天。生命力极其旺盛，抗压能力爆表。面对困难有不屈不挠的斗志，但也容易冲动鲁莽。适合具有强竞争性的高强度行业。"
+        };
+
+        // 辅以时辰判断奇建外格
+        const outerPatternData =["飞天禄马", "丑遥巳禄", "六阴朝阳", "时上一位贵", "壬骑龙背", "刑合得禄", "归禄格", "专旺格", "合禄格", "从弱格", "魁罡格", "六乙鼠贵"];
+
+        const zhiHidden = { "子":"癸", "丑":"己", "寅":"甲", "卯":"乙", "辰":"戊", "巳":"丙", "午":"丁", "未":"己", "申":"庚", "酉":"辛", "戌":"戊", "亥":"壬" };
+
+        function getTenGod(dayGan, targetGan) {
+            const elements = {"甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水"};
+            const polarities = {"甲":1,"乙":0,"丙":1,"丁":0,"戊":1,"己":0,"庚":1,"辛":0,"壬":1,"癸":0};
+            const relMap = {
+                "木木": [0, 1], "木火": [2, 3], "木土": [4, 5], "木金": [6, 7], "木水": [8, 9],
+                "火火":[0, 1], "火土": [2, 3], "火金": [4, 5], "火水": [6, 7], "火木": [8, 9],
+                "土土": [0, 1], "土金": [2, 3], "土水":[4, 5], "土木": [6, 7], "土火": [8, 9],
+                "金金": [0, 1], "金水": [2, 3], "金木": [4, 5], "金火": [6, 7], "金土":[8, 9],
+                "水水": [0, 1], "水木":[2, 3], "水火": [4, 5], "水土": [6, 7], "水金": [8, 9]
+            };
+            const names =["建禄格", "羊刃格", "食神格", "伤官格", "偏财格", "正财格", "七杀格", "正官格", "偏印格", "正印格"];
+            let e1 = elements[dayGan], e2 = elements[targetGan];
+            let p1 = polarities[dayGan], p2 = polarities[targetGan];
+            let index = relMap[e1 + e2][p1 === p2 ? 0 : 1];
+            return names[index];
+        }
+
         // ====== 完整无阉割版 64卦 顶级数据库 ======
         const trigramYao = { 1:[1,1,1], 2:[1,1,0], 3:[1,0,1], 4:[1,0,0], 5:[0,1,1], 6:[0,1,0], 7:[0,0,1], 8:[0,0,0] };
         
@@ -432,6 +516,21 @@
             document.getElementById('d-nayin').innerText = baZi.getDayNaYin();
             document.getElementById('t-nayin').innerText = baZi.getTimeNaYin();
 
+            // === 命理格局剖析 (新增) ===
+            let dayGan = baZi.getDayGan();
+            let monthZhi = baZi.getMonthZhi();
+            let hourZhiIndex = lunarDate.getTimeZhiIndex();
+            
+            let targetGan = zhiHidden[monthZhi] || "甲"; // 容错
+            let innerGeju = getTenGod(dayGan, targetGan);
+            let outerGeju = outerPatternData[hourZhiIndex]; // 以时支取外格点缀
+            
+            document.getElementById('geju-daymaster').innerText = dayMasterData[dayGan] || `日主为${dayGan}。`;
+            document.getElementById('geju-inner-tag').innerText = "格局：" + innerGeju;
+            document.getElementById('geju-outer-tag').innerText = "外格：" + outerGeju;
+            document.getElementById('geju-desc').innerHTML = `<strong>【${innerGeju}】</strong><br/>${shishenData[innerGeju] || "平稳之局，中和为贵。"}`;
+
+
             // === 梅花易数本命卦起卦 ===
             let up = (lunarDate.getYearZhiIndex() + 1 + Math.abs(lunarDate.getMonth()) + lunarDate.getDay()) % 8 || 8;
             let low = (lunarDate.getYearZhiIndex() + 1 + Math.abs(lunarDate.getMonth()) + lunarDate.getDay() + lunarDate.getTimeZhiIndex() + 1) % 8 || 8;
@@ -455,15 +554,24 @@
             // === 极美连动效显现 ===
             const resultBox = document.getElementById('result-box');
             resultBox.style.display = 'block';
+            document.getElementById('geju-section').style.display = 'block';
             document.getElementById('gua-section').style.display = 'block';
             
             // 八字柱子优雅依次浮现
             const pillars = document.querySelectorAll('.pillar-card');
             pillars.forEach(p => { p.style.animation = 'none'; p.style.opacity = '0'; });
-            resultBox.offsetHeight; 
+            
+            // 格局卡片浮现
+            const gejuCard = document.getElementById('geju-card');
+            gejuCard.style.animation = 'none';
+            gejuCard.style.opacity = '0';
+            
+            resultBox.offsetHeight; // 触发重绘
+            
             pillars.forEach((p, idx) => {
                 p.style.animation = `pillarFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) ${idx * 0.15}s forwards`;
             });
+            gejuCard.style.animation = `pillarFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s forwards`;
 
             // 如果不是点历史记录触发的，则平滑滚动到底部
             if(!isFromHistory) {
@@ -515,7 +623,7 @@
         function saveHistory(data) {
             historyData = historyData.filter(item => item.name !== data.name || item.name === '无名居士');
             historyData.unshift(data); 
-            if(historyData.length > 8) historyData.pop(); // 增加到保存8条
+            if(historyData.length > 8) historyData.pop(); 
             localStorage.setItem('bazi_history', JSON.stringify(historyData));
             renderHistory();
         }
@@ -567,17 +675,17 @@
             calculateBazi(true);
         }
 
-        // 加了一点人情味的清空功能
+        // 加了一点人情味的清空功能，并强制刷新达到无痕效果
         function clearHistory() {
             if(confirm("纪要一旦清空便如风过无痕，确定要舍弃这些缘分记录吗？")) {
                 historyData =
-                localStorage.removeItem('bazi_history'); // 抹除浏览器的记忆
-                renderHistory(); // 刷新界面（历史记录区会自动隐藏）
+                    localStorage.removeItem('bazi_history'); // 抹除浏览器本地缓存
                 
                 // 增加一点人情味的告别提示
-                setTimeout(() => {
-                    alert("尘缘已了，过往纪要已悉数随风消散。愿您未来的推演皆是上上大吉。");
-                }, 100);
+                alert("尘缘已了，过往纪要已悉数随风消散。愿您未来的推演皆是上上大吉。");
+                
+                // 强制刷新页面，让页面回归最初的干净状态，彻底无痕
+                window.location.reload(true);
             }
         }
     </script>
