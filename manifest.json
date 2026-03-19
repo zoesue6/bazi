@@ -1,0 +1,17 @@
+{
+    "name": "千里江山 · 八字",
+    "short_name": "八字推演",
+    "description": "极简青绿山水高级八字排盘工具",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#122630",
+    "theme_color": "#122630",
+    "icons":[
+        {
+            "src": "icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
