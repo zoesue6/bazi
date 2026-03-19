@@ -116,7 +116,7 @@
 
         @keyframes pillarFade { to { opacity: 1; transform: translateY(0); } }
 
-        /* ====== 命局格局剖析区 (新增) ====== */
+        /* ====== 命局格局剖析区 ====== */
         .geju-section { margin-top: 25px; position: relative; z-index: 1; }
         .geju-header { text-align: center; margin-bottom: 20px; }
         .geju-title { font-size: 1.1rem; color: var(--blue-dark); font-weight: 900; letter-spacing: 8px; margin-bottom: 8px; position: relative; display: inline-block;}
@@ -128,11 +128,13 @@
             border: 1px solid rgba(201, 160, 99, 0.4); border-radius: 12px; padding: 25px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.03); opacity: 0; transform: translateY(20px);
         }
-        .geju-tags { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .geju-tags { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
         .g-tag { padding: 4px 12px; border-radius: 4px; font-size: 0.9rem; font-weight: 600; letter-spacing: 2px; }
         .inner-tag { background: rgba(43, 122, 90, 0.1); color: var(--green); border: 1px solid rgba(43, 122, 90, 0.3); }
         .outer-tag { background: rgba(201, 160, 99, 0.1); color: #B37D40; border: 1px solid rgba(201, 160, 99, 0.3); }
+        .strength-tag { background: rgba(139, 44, 36, 0.08); color: var(--red); border: 1px solid rgba(139, 44, 36, 0.25); }
         .geju-desc { font-family: var(--font-sans); font-size: 0.95rem; color: var(--dark); line-height: 1.8; text-align: justify; opacity: 0.9;}
+        .geju-desc strong { font-family: var(--font-main); font-size: 1.05rem; color: var(--blue-dark); letter-spacing: 1px;}
 
         /* ====== 六十四卦高级排版区 ====== */
         .gua-section {
@@ -281,7 +283,6 @@
                 </div>
             </div>
 
-            <!-- 新增：命局格局剖析区 -->
             <div class="geju-section" id="geju-section" style="display: none;">
                 <div class="geju-header">
                     <div class="geju-title">命 局 剖 析</div>
@@ -291,6 +292,7 @@
                     <div class="geju-tags">
                         <span class="g-tag inner-tag" id="geju-inner-tag"></span>
                         <span class="g-tag outer-tag" id="geju-outer-tag"></span>
+                        <span class="g-tag strength-tag" id="geju-strength-tag"></span>
                     </div>
                     <div class="geju-desc" id="geju-desc"></div>
                 </div>
@@ -314,13 +316,12 @@
         <div class="history-section" id="history-section">
             <div class="history-title">—— 推 演 纪 要 ——</div>
             <div class="history-list" id="history-list"></div>
-            <!-- 加了一点人情味的清空按钮 -->
             <button class="btn-clear" onclick="clearHistory()">🧹 清空所有尘缘纪要</button>
         </div>
     </div>
 
     <script>
-        // ====== 命理格局数据词典 (新增) ======
+        // ====== 命理格局数据词典 ======
         const dayMasterData = {
             "甲": "日主为甲，属阳木。如参天大树，生机勃勃，刚直倔强，极具向上生长的力量。",
             "乙": "日主为乙，属阴木。如花草藤蔓，柔软坚韧，极具适应力，能在逆境中蔓延逢生。",
@@ -334,39 +335,156 @@
             "癸": "日主为癸，属阴水。如雨露甘霖，滋润无声，聪明灵动，具有极强的渗透力与直觉。"
         };
 
-        const shishenData = {
-            "正官格": "贵气天成，秉公任直。具备极强的管理能力和道德底线，行事有度，适合在正规体制或大型企业中担任管理要职。人生信条是秩序与责任。",
-            "七杀格": "开拓进取，威风凛凛。极具魄力和执行力，能在逆境与混乱中杀出一条血路。带有极强的个人英雄主义色彩，适合创业或竞争激烈的行业。",
-            "正印格": "慈悲仁厚，思想深邃。天然带有书卷气，长辈缘极佳。重视精神世界的丰盈，淡泊名利，非常适合教育、文化、学术及公益领域。",
-            "偏印格": "领悟力强，特立独行。具有极高的艺术天赋、敏锐的直觉和第六感。不走寻常路，在偏门、宗教、设计或小众领域往往能取得惊人成就。",
-            "正财格": "勤俭踏实，按部就班。对金钱和资源有天生的敏感度，讲究一分耕耘一分收获。财富积累稳健，极其重视现实与安稳，适合金融与理财。",
-            "偏财格": "慷慨大方，眼光独到。擅长资源整合与风险投资，具有极强的商业头脑和交际能力。为人豪爽，一生常有意外之财，是天生的生意人。",
-            "伤官格": "才华横溢，桀骜不驯。思维极其活跃，敢于打破常规。极具个人魅力与表达欲，但也容易锋芒太露。适合演艺、设计、公关等创意行业。",
-            "食神格": "温文尔雅，懂得享受。自带福气与口福，性格宽厚，不喜欢激烈的争斗。一生相对安逸顺遂，适合从事文艺、美食、教育及服务业。",
-            "建禄格": "自强不息，脚踏实地。大多不靠祖业，全凭自己打拼。具有坚韧不拔的意志力和极强的自尊心，独立性极高，属于实干兴邦的类型。",
-            "羊刃格": "冲劲十足，义薄云天。生命力极其旺盛，抗压能力爆表。面对困难有不屈不挠的斗志，但也容易冲动鲁莽。适合具有强竞争性的高强度行业。"
+        const zhengGeData = {
+            "正官格": "贵气天成，秉公任直。具备极强的管理能力和道德底线，行事有度，适合在正规体系内担任要职。人生信条是秩序与责任。",
+            "七杀格": "开拓进取，威风凛凛。极具魄力和执行力，能在逆境中杀出一条血路。带有强烈的个人英雄色彩，适合创业或破局。",
+            "正印格": "慈悲仁厚，思想深邃。天然带有书卷气，长辈缘极佳。重视精神世界的丰盈，淡泊名利，极其适合教育与文化领域。",
+            "偏印格": "领悟力强，特立独行。具有极高的艺术天赋和敏锐的第六感。不走寻常路，在偏门、宗教、设计或小众领域能取惊人成就。",
+            "正财格": "勤俭踏实，按部就班。对金钱和资源有天生敏感度，讲究一分耕耘一分收获。财富积累稳健，极其重视现实与安稳。",
+            "偏财格": "慷慨大方，眼光独到。擅长资源整合与风险投资，具极强商业头脑。为人豪爽，一生常有意外之财，天生的生意人。",
+            "伤官格": "才华横溢，桀骜不驯。思维活跃，敢于打破常规。极具个人魅力与表达欲，但也容易锋芒太露。适合演艺、设计、创意等行业。",
+            "食神格": "温文尔雅，懂得享受。自带福气与口福，性格宽厚，不喜激烈争斗。一生相对安逸顺遂，适合从事文艺、美食及服务业。",
+            "建禄格": "自强不息，脚踏实地。大多不靠祖业，全凭自己打拼。具有坚韧不拔的意志力和极强自尊心，独立性极高，属于实干派。",
+            "羊刃格": "冲劲十足，义薄云天。生命力极其旺盛，抗压能力爆表。面对困难有不屈不挠的斗志，但也需克制鲁莽，适合高竞争环境。"
         };
 
-        // 辅以时辰判断奇建外格
-        const outerPatternData =["飞天禄马", "丑遥巳禄", "六阴朝阳", "时上一位贵", "壬骑龙背", "刑合得禄", "归禄格", "专旺格", "合禄格", "从弱格", "魁罡格", "六乙鼠贵"];
+        const waiGeData = {
+            "魁罡格": "辰戌相见，杀伐果断。自带威严与领导气质，往往能在逆境与大是大非前展露雷霆万钧之魄力。",
+            "曲直格": "木气专旺，仁慈而倔强。如参天大树般正直不屈，生命力极强，成就往往惠及苍生。",
+            "炎上格": "火气专旺，热情而猛烈。气势如日中天，极具才华与感染力，适合在光芒万丈的事业中燃烧自我。",
+            "稼穑格": "土气专旺，沉稳而厚重。如大地般承载万物，极具信誉与包容心，财富与地位往往坚不可摧。",
+            "从革格": "金气专旺，刚毅而锋利。执行力与决断力极高，具有改革与肃杀之气，天生具备破局者的气场。",
+            "润下格": "水气专旺，至柔而至刚。智慧深不可测，极具渗透力与变通性，能在无形之中掌控全局。",
+            "从旺格": "全局同气连枝，顺应旺盛之势。不可逆其锋芒，能将专注力发挥至极，成就不凡。",
+            "从弱格": "大智若愚，顺应天时。能舍弃个人执念，融入大势，往往能得贵人或绝地逢生之大机缘。",
+            "从财格": "全局财星旺极，顺应财富之势。天生对商机嗅觉极度敏锐，能在资本与资源的洪流中如鱼得水。",
+            "从杀格": "全局官杀旺极，顺应权威之势。能够在高压与极其严格的体系中获得至高权力，手握重器。",
+            "官印相生格": "官星与印星互相护卫。为人端正清高，极具贵气，擅长管理与统筹，属于名利双收的绝佳命局。",
+            "食神生财格": "和气生财的典范。头脑灵活，懂得将自身的才华、技术与人脉资源完美转化为丰厚的财富。",
+            "伤官佩印格": "才华横溢却不张狂，以印星约束伤官的锋芒。极具学术与权威造诣，以德服人，名声极其远大。",
+            "食神制杀格": "以才智与手腕化解危机与强敌。临危不乱，能将极大的风险转化为极高的成就与权力。",
+            "清粹中和格": "五行流转有情，不偏不倚。一生少有大起大落，平稳安康，属于厚福绵长的清贵之局。"
+        };
 
+        const strengthData = {
+            "身强": "日主逢生得令，根基深厚，五行能量充沛。具备极强的抗压与决断力，能胜任财官，无需过度依赖外力，一生以独立开创为主。",
+            "身弱": "日主失令受制，气场相对温和内敛。需借助印星（长辈、学习）或比劫（同伴、团队）之功方可担大任，懂得“借力打力”是人生的核心智慧。",
+            "极强 (专旺)": "日元旺极，满盘同气，势不可挡。此乃特殊造化，不可逆其锋芒。顺势而为必能成就大业，往往能在某一专精领域登峰造极。",
+            "极弱 (从格)": "日元极弱，无根无助。懂得放下自我执念，顺应局中强旺之神，此乃绝地逢生之象。能随遇而安，乘势而上，往往逢凶化吉。"
+        };
+
+        // ====== 核心推演算法区 ======
+        const wxMap = {
+            "甲":"木", "乙":"木", "丙":"火", "丁":"火", "戊":"土", "己":"土", "庚":"金", "辛":"金", "壬":"水", "癸":"水",
+            "子":"水", "丑":"土", "寅":"木", "卯":"木", "辰":"土", "巳":"火", "午":"火", "未":"土", "申":"金", "酉":"金", "戌":"土", "亥":"水"
+        };
         const zhiHidden = { "子":"癸", "丑":"己", "寅":"甲", "卯":"乙", "辰":"戊", "巳":"丙", "午":"丁", "未":"己", "申":"庚", "酉":"辛", "戌":"戊", "亥":"壬" };
 
-        function getTenGod(dayGan, targetGan) {
+        function getTenGodInfo(dayGan, targetGan) {
             const elements = {"甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水"};
             const polarities = {"甲":1,"乙":0,"丙":1,"丁":0,"戊":1,"己":0,"庚":1,"辛":0,"壬":1,"癸":0};
             const relMap = {
-                "木木": [0, 1], "木火": [2, 3], "木土": [4, 5], "木金": [6, 7], "木水": [8, 9],
-                "火火":[0, 1], "火土": [2, 3], "火金": [4, 5], "火水": [6, 7], "火木": [8, 9],
-                "土土": [0, 1], "土金": [2, 3], "土水":[4, 5], "土木": [6, 7], "土火": [8, 9],
-                "金金": [0, 1], "金水": [2, 3], "金木": [4, 5], "金火": [6, 7], "金土":[8, 9],
-                "水水": [0, 1], "水木":[2, 3], "水火": [4, 5], "水土": [6, 7], "水金": [8, 9]
+                "木木": [0, 1], "木火": [2, 3], "木土": [4, 5], "木金":[6, 7], "木水": [8, 9],
+                "火火":[0, 1], "火土": [2, 3], "火金": [4, 5], "火水":[6, 7], "火木": [8, 9],
+                "土土":[0, 1], "土金": [2, 3], "土水":[4, 5], "土木": [6, 7], "土火": [8, 9],
+                "金金": [0, 1], "金水": [2, 3], "金木":[4, 5], "金火": [6, 7], "金土":[8, 9],
+                "水水": [0, 1], "水木":[2, 3], "水火":[4, 5], "水土": [6, 7], "水金": [8, 9]
             };
             const names =["建禄格", "羊刃格", "食神格", "伤官格", "偏财格", "正财格", "七杀格", "正官格", "偏印格", "正印格"];
+            const rawTypes =["比劫","比劫","食伤","食伤","财星","财星","官杀","官杀","印星","印星"];
             let e1 = elements[dayGan], e2 = elements[targetGan];
             let p1 = polarities[dayGan], p2 = polarities[targetGan];
             let index = relMap[e1 + e2][p1 === p2 ? 0 : 1];
-            return names[index];
+            return { name: names[index], type: rawTypes[index], e: e2 };
+        }
+
+        // 精密八字格局与强弱分析算法
+        function analyzeBazi(baZi) {
+            const dG = baZi.getDayGan(), dZ = baZi.getDayZhi();
+            const yG = baZi.getYearGan(), yZ = baZi.getYearZhi();
+            const mG = baZi.getMonthGan(), mZ = baZi.getMonthZhi();
+            const tG = baZi.getTimeGan(), tZ = baZi.getTimeZhi();
+            
+            const dmElem = wxMap[dG];
+            // 计算生扶日主的五行（印星为生，比劫为同）
+            const supportElems = dmElem === "木" ? ["水", "木"] : dmElem === "火" ? ["木", "火"] : dmElem === "土" ? ["火", "土"] : dmElem === "金" ?["土", "金"] : ["金", "水"];
+            
+            // 经典五行权重比赋分(满分100): 月支(40), 日支(15), 时支(10), 年支(10), 月干(10), 时干(10), 年干(5)
+            let score = 0;
+            const baziChars =[
+                { char: mZ, weight: 40 }, { char: dZ, weight: 15 }, { char: tZ, weight: 10 }, { char: yZ, weight: 10 },
+                { char: mG, weight: 10 }, { char: tG, weight: 10 }, { char: yG, weight: 5 }
+            ];
+            
+            let elementsCount = { "木":0, "火":0, "土":0, "金":0, "水":0 };
+            elementsCount[dmElem] += 1; // 日主本身计入统计但不算分
+
+            baziChars.forEach(item => {
+                let e = wxMap[item.char];
+                elementsCount[e] += 1;
+                if(supportElems.includes(e)) score += item.weight;
+            });
+
+            // 1. 判断强弱与极值
+            let strengthTag = "";
+            let isZhuanWang = false, isCong = false;
+
+            if(score >= 80) { strengthTag = "极强 (专旺)"; isZhuanWang = true; }
+            else if(score <= 18) { strengthTag = "极弱 (从格)"; isCong = true; }
+            else if(score >= 48) { strengthTag = "身强"; }
+            else { strengthTag = "身弱"; }
+
+            // 2. 取正格 (以月令本气为主干经典取格法)
+            let mainQi = zhiHidden[mZ] || "甲";
+            let zhengGeInfo = getTenGodInfo(dG, mainQi);
+            let zhengGe = zhengGeInfo.name;
+
+            // 3. 取变格/外格 (精准古典逻辑)
+            let waiGe = "清粹中和格"; 
+            let dayGZ = dG + dZ;
+            
+            // 魁罡查法
+            if(["庚辰", "庚戌", "戊戌", "壬辰"].includes(dayGZ)) {
+                waiGe = "魁罡格";
+            } else if (isZhuanWang) {
+                // 五行专旺格局
+                if(dmElem === "木") waiGe = "曲直格";
+                else if(dmElem === "火") waiGe = "炎上格";
+                else if(dmElem === "土") waiGe = "稼穑格";
+                else if(dmElem === "金") waiGe = "从革格";
+                else if(dmElem === "水") waiGe = "润下格";
+                else waiGe = "从旺格";
+            } else if (isCong) {
+                // 找出最强的克泄耗神来判定从什么
+                let maxE = "", maxV = -1;
+                for(let k in elementsCount) {
+                    if(!supportElems.includes(k) && elementsCount[k] > maxV) { maxV = elementsCount[k]; maxE = k; }
+                }
+                // 通过十神分类
+                if(maxE) {
+                    let type = getTenGodInfo(dG, zhiHidden[Object.keys(wxMap).find(k=>wxMap[k]===maxE)] || "甲").type;
+                    if(type === "财星") waiGe = "从财格";
+                    else if(type === "官杀") waiGe = "从杀格";
+                    else waiGe = "从弱格";
+                } else {
+                    waiGe = "从弱格";
+                }
+            } else {
+                // 组合外格: 提取局中存在的其他十神大类
+                let typesInBazi = new Set();
+                baziChars.forEach(item => {
+                    let tg = zhiHidden[item.char] || item.char; // 转天干
+                    if("甲乙丙丁戊己庚辛壬癸".includes(tg)) {
+                        typesInBazi.add(getTenGodInfo(dG, tg).type);
+                    }
+                });
+                if(typesInBazi.has("官杀") && typesInBazi.has("印星")) waiGe = "官印相生格";
+                else if(typesInBazi.has("食伤") && typesInBazi.has("财星")) waiGe = "食神生财格";
+                else if(typesInBazi.has("食伤") && typesInBazi.has("官杀")) waiGe = "食神制杀格";
+                else if(typesInBazi.has("伤官") && typesInBazi.has("印星")) waiGe = "伤官佩印格";
+            }
+
+            return { zhengGe, waiGe, strengthTag };
         }
 
         // ====== 完整无阉割版 64卦 顶级数据库 ======
@@ -516,19 +634,21 @@
             document.getElementById('d-nayin').innerText = baZi.getDayNaYin();
             document.getElementById('t-nayin').innerText = baZi.getTimeNaYin();
 
-            // === 命理格局剖析 (新增) ===
+            // === 精准命理格局剖析 ===
+            const baziAnalysis = analyzeBazi(baZi);
             let dayGan = baZi.getDayGan();
-            let monthZhi = baZi.getMonthZhi();
-            let hourZhiIndex = lunarDate.getTimeZhiIndex();
-            
-            let targetGan = zhiHidden[monthZhi] || "甲"; // 容错
-            let innerGeju = getTenGod(dayGan, targetGan);
-            let outerGeju = outerPatternData[hourZhiIndex]; // 以时支取外格点缀
             
             document.getElementById('geju-daymaster').innerText = dayMasterData[dayGan] || `日主为${dayGan}。`;
-            document.getElementById('geju-inner-tag').innerText = "格局：" + innerGeju;
-            document.getElementById('geju-outer-tag').innerText = "外格：" + outerGeju;
-            document.getElementById('geju-desc').innerHTML = `<strong>【${innerGeju}】</strong><br/>${shishenData[innerGeju] || "平稳之局，中和为贵。"}`;
+            document.getElementById('geju-inner-tag').innerText = "正格：" + baziAnalysis.zhengGe;
+            document.getElementById('geju-outer-tag').innerText = "外格：" + baziAnalysis.waiGe;
+            document.getElementById('geju-strength-tag').innerText = "强弱：" + baziAnalysis.strengthTag;
+            
+            // 拼接优美的命理剖析描述
+            let descHtml = `<strong>【正格 · ${baziAnalysis.zhengGe}】</strong><br/>${zhengGeData[baziAnalysis.zhengGe] || "格局清雅，中和为贵。"}<br/><br/>`;
+            descHtml += `<strong>【外格 · ${baziAnalysis.waiGe}】</strong><br/>${waiGeData[baziAnalysis.waiGe] || "五行流转，和顺通达。"}<br/><br/>`;
+            descHtml += `<strong>【日主强弱 · ${baziAnalysis.strengthTag}】</strong><br/>${strengthData[baziAnalysis.strengthTag] || "五行平和，生克得宜。"}`;
+            
+            document.getElementById('geju-desc').innerHTML = descHtml;
 
 
             // === 梅花易数本命卦起卦 ===
@@ -557,11 +677,9 @@
             document.getElementById('geju-section').style.display = 'block';
             document.getElementById('gua-section').style.display = 'block';
             
-            // 八字柱子优雅依次浮现
             const pillars = document.querySelectorAll('.pillar-card');
             pillars.forEach(p => { p.style.animation = 'none'; p.style.opacity = '0'; });
             
-            // 格局卡片浮现
             const gejuCard = document.getElementById('geju-card');
             gejuCard.style.animation = 'none';
             gejuCard.style.opacity = '0';
@@ -573,7 +691,6 @@
             });
             gejuCard.style.animation = `pillarFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s forwards`;
 
-            // 如果不是点历史记录触发的，则平滑滚动到底部
             if(!isFromHistory) {
                 setTimeout(() => {
                     document.getElementById('gua-section').scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -581,7 +698,7 @@
             }
         }
 
-        // ====== IntersectionObserver：滚动到视野才播放六爻动画 ======
+        // ====== IntersectionObserver ======
         function drawHexagram(upper, lower) {
             const upYao = trigramYao[upper]; const lowYao = trigramYao[lower];
             const sixYao =[...lowYao, ...upYao]; 
@@ -604,13 +721,11 @@
             const box = document.getElementById('gua-svg-box');
             box.innerHTML = svgHtml;
 
-            // 监听滚动，看见了再画
             if(window.guaObserver) window.guaObserver.disconnect();
             window.guaObserver = new IntersectionObserver((entries) => {
                 if(entries[0].isIntersecting) {
                     const lines = box.querySelectorAll('.yao-line');
                     lines.forEach((line, idx) => {
-                        // 动画延迟从下(idx=5)往上递增，古法初爻至上爻
                         line.style.animation = `drawYao 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) ${idx * 0.18}s forwards`;
                     });
                     window.guaObserver.disconnect();
@@ -675,16 +790,10 @@
             calculateBazi(true);
         }
 
-        // 加了一点人情味的清空功能，并强制刷新达到无痕效果
         function clearHistory() {
             if(confirm("纪要一旦清空便如风过无痕，确定要舍弃这些缘分记录吗？")) {
-                historyData =
-                    localStorage.removeItem('bazi_history'); // 抹除浏览器本地缓存
-                
-                // 增加一点人情味的告别提示
+                localStorage.removeItem('bazi_history'); 
                 alert("尘缘已了，过往纪要已悉数随风消散。愿您未来的推演皆是上上大吉。");
-                
-                // 强制刷新页面，让页面回归最初的干净状态，彻底无痕
                 window.location.reload(true);
             }
         }
