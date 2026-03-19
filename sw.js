@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bazi-v2';
+const CACHE_NAME = 'bazi-v3'; // <--- 关键在这里：每次更新代码，把这个数字加 1
 const urlsToCache =[
     './',
     './index.html',
@@ -10,7 +10,7 @@ const urlsToCache =[
 ];
 
 self.addEventListener('install', event => {
-    // 强制立即接管控制权
+    // 强制新版本立即接管控制权
     self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -19,7 +19,7 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-    // 清理旧版本缓存，保证每次发版更新
+    // 激活新版本时，清理掉所有的旧版本缓存
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
@@ -37,9 +37,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                // 如果缓存中有，就直接返回缓存
                 if (response) return response;
-                // 否则发起网络请求
                 return fetch(event.request);
             })
     );
