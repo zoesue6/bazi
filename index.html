@@ -2,18 +2,16 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 针对手机端适配的视口设置 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>千里江山 · 极简八字与本命卦推演</title>
+    <title>千里江山 · 乾坤推演</title>
     
-    <!-- PWA 必备 -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#122630">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="八字推演">
+    <meta name="apple-mobile-web-app-title" content="乾坤推演">
     <link rel="apple-touch-icon" href="icon.png">
-    
+
     <!-- 引入 Lunar 日历库 -->
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;900&display=swap" rel="stylesheet">
@@ -24,10 +22,12 @@
             --green: #2B7A5A;       /* 石绿 */
             --gold: #C9A063;        /* 泥金 */
             --dark: #2C2C2C;        /* 焦墨 */
+            --gray: #555555;        /* 雅灰 */
             --red: #8B2C24;         /* 朱砂 */
-            --glass-bg: rgba(245, 245, 240, 0.65); 
+            --glass-bg: rgba(245, 245, 240, 0.75); 
             
             --font-main: 'Noto Serif SC', serif;
+            --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,131 +42,136 @@
             overflow-x: hidden;
             overflow-y: auto; 
             background-color: #122630;
-            padding: 20px 0;
+            padding: 40px 0;
+            scroll-behavior: smooth;
         }
 
-        /* ====== 背景图：虚实相生动效 ====== */
+        /* ====== 背景虚实相生动效 ====== */
         .bg-image {
-            position: fixed;
-            top: -10vh; left: -5vw;
-            width: 110vw; height: 120vh; 
-            background-image: url('1.png');
-            background-size: cover;
-            background-position: center;
-            z-index: 0;
-            animation: introBg 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            position: fixed; top: -10vh; left: -5vw; width: 110vw; height: 120vh; 
+            background-image: url('1.png'); background-size: cover; background-position: center;
+            z-index: 0; animation: introBg 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
-
         @keyframes introBg {
             0% { filter: blur(0px) brightness(1.1) saturate(1); transform: scale(1.05); }
-            100% { filter: blur(12px) brightness(0.75) saturate(1.3); transform: scale(1); }
+            100% { filter: blur(14px) brightness(0.75) saturate(1.2); transform: scale(1); }
         }
 
-        /* ====== 主控制面板 ====== */
+        /* ====== 主面板 ====== */
         .glass-panel {
-            position: relative;
-            z-index: 10;
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 16px;
-            padding: 50px 60px;
-            width: 90%;
-            max-width: 680px;
+            position: relative; z-index: 10; background: var(--glass-bg);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 16px;
+            padding: 50px 60px; width: 92%; max-width: 680px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.4);
-            opacity: 0;
-            transform: translateY(30px);
-            animation: introPanel 1.5s 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            margin: auto;
+            opacity: 0; transform: translateY(30px);
+            animation: introPanel 1.5s 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; margin: auto;
         }
-
         @keyframes introPanel { to { opacity: 1; transform: translateY(0); } }
 
-        /* ====== 标题与标签 ====== */
-        .header { text-align: center; margin-bottom: 35px; }
-        .header h1 { font-size: 2.2rem; color: var(--blue-dark); letter-spacing: 12px; font-weight: 600; margin-bottom: 10px; text-indent: 12px; }
+        /* ====== 标题区 ====== */
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { font-size: 2.2rem; color: var(--blue-dark); letter-spacing: 12px; font-weight: 900; margin-bottom: 10px; text-indent: 12px; }
         .header-line { width: 1px; height: 30px; background: var(--gold); margin: 0 auto; position: relative; }
         .header-line::after { content: ''; position: absolute; bottom: -3px; left: -2px; width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
         
         .tabs { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
-        .tab-btn { background: none; border: none; font-family: var(--font-main); font-size: 1.1rem; color: #666; cursor: pointer; padding-bottom: 5px; position: relative; transition: 0.4s; font-weight: 300; }
-        .tab-btn.active { color: var(--blue-dark); font-weight: 600; }
+        .tab-btn { background: none; border: none; font-family: var(--font-main); font-size: 1.1rem; color: #777; cursor: pointer; padding-bottom: 5px; position: relative; transition: 0.4s; font-weight: 600; }
+        .tab-btn.active { color: var(--blue-dark); font-weight: 900; }
         .tab-btn::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gold); transition: 0.4s; transform: translateX(-50%); }
         .tab-btn.active::after { width: 100%; }
 
         /* ====== 表单区 ====== */
         .form-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px 15px; margin-bottom: 35px; }
         .input-group { display: flex; flex-direction: column; grid-column: span 2; }
-        .input-group label { font-size: 0.75rem; color: var(--blue); margin-bottom: 8px; letter-spacing: 2px; opacity: 0.8; }
+        .input-group.full { grid-column: span 6; }
+        .input-group label { font-size: 0.75rem; color: var(--blue); margin-bottom: 8px; letter-spacing: 2px; font-weight: 600; opacity: 0.9; }
         
-        input { background: transparent; border: none; border-bottom: 1px solid rgba(28, 74, 97, 0.3); padding: 5px 0 8px 0; font-family: var(--font-main); font-size: 1.2rem; color: var(--dark); text-align: center; transition: 0.3s; border-radius: 0; -webkit-appearance: none; }
+        input { background: transparent; border: none; border-bottom: 1px solid rgba(28, 74, 97, 0.3); padding: 8px 0; font-family: var(--font-main); font-size: 1.2rem; color: var(--dark); text-align: center; transition: 0.3s; border-radius: 0; -webkit-appearance: none; }
         input:focus { outline: none; border-bottom: 1px solid var(--green); background: linear-gradient(to top, rgba(43, 122, 90, 0.08), transparent); }
+        input::placeholder { color: rgba(28, 74, 97, 0.3); font-size: 1rem; font-weight: 300; }
 
-        /* ====== 性别切换选项 ====== */
         .gender-toggle { display: flex; gap: 10px; height: 100%; align-items: flex-end; padding-bottom: 2px;}
-        .gender-btn { flex: 1; padding: 6px 0; font-size: 0.9rem; font-family: var(--font-main); background: transparent; border: 1px solid rgba(28, 74, 97, 0.3); color: var(--blue); cursor: pointer; transition: 0.3s; border-radius: 4px; }
+        .gender-btn { flex: 1; padding: 8px 0; font-size: 0.95rem; font-family: var(--font-main); background: transparent; border: 1px solid rgba(28, 74, 97, 0.3); color: var(--blue); cursor: pointer; transition: 0.3s; border-radius: 4px; }
         .gender-btn.active { background: var(--green); color: white; border-color: var(--green); box-shadow: 0 4px 10px rgba(43, 122, 90, 0.2); }
 
         .checkbox-group { grid-column: span 6; display: none; justify-content: center; align-items: center; gap: 10px; font-size: 0.9rem; opacity: 0.8; }
 
-        /* ====== 按钮 ====== */
-        .btn-submit { width: 100%; padding: 15px; background: transparent; color: var(--green); border: 1px solid var(--green); border-radius: 4px; font-family: var(--font-main); font-size: 1.1rem; letter-spacing: 10px; text-indent: 10px; cursor: pointer; transition: all 0.4s ease; }
+        .btn-submit { width: 100%; padding: 15px; background: transparent; color: var(--green); border: 1px solid var(--green); border-radius: 4px; font-family: var(--font-main); font-size: 1.1rem; letter-spacing: 10px; text-indent: 10px; cursor: pointer; transition: all 0.4s ease; font-weight: 600;}
         .btn-submit:hover, .btn-submit:active { background: var(--green); color: #fff; box-shadow: 0 10px 20px rgba(43, 122, 90, 0.25); letter-spacing: 15px; }
 
         /* ====== 结果展示区 ====== */
-        .result-box { margin-top: 35px; padding-top: 30px; border-top: 1px solid rgba(201, 160, 99, 0.3); display: none; }
-        .date-info { text-align: center; margin-bottom: 25px; line-height: 1.8; color: var(--blue-dark); font-size: 0.85rem; letter-spacing: 1px; font-weight: 600; }
+        .result-box { margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(201, 160, 99, 0.4); display: none; position: relative; }
+        
+        .date-info { text-align: center; margin-bottom: 35px; line-height: 2; color: var(--blue-dark); font-size: 0.9rem; letter-spacing: 1px; font-weight: 600; position: relative; z-index: 1;}
+        .date-info span { color: var(--red); font-size: 1.1rem; margin: 0 5px;}
 
-        /* 八字排盘 */
-        .bazi-layout { display: flex; flex-direction: row-reverse; justify-content: center; gap: 25px; margin-bottom: 30px; }
-        .pillar-card { display: flex; flex-direction: column; align-items: center; }
+        /* 八字排盘连动效 */
+        .bazi-layout { display: flex; flex-direction: row-reverse; justify-content: center; gap: 25px; margin-bottom: 40px; position: relative; z-index: 1;}
+        .pillar-card { display: flex; flex-direction: column; align-items: center; opacity: 0; transform: translateY(20px); }
         .pillar-title { font-size: 0.75rem; color: var(--blue); margin-bottom: 15px; letter-spacing: 2px; writing-mode: vertical-rl; }
-        .bazi-text { writing-mode: vertical-rl; text-orientation: upright; font-size: 2.2rem; font-weight: 400; color: var(--dark); letter-spacing: 10px; margin-bottom: 20px; }
-        .seal { border: 1px solid var(--red); color: var(--red); font-size: 0.7rem; padding: 5px 3px; writing-mode: vertical-rl; text-orientation: upright; border-radius: 2px; margin-top: 8px; opacity: 0.85; }
+        .bazi-text { writing-mode: vertical-rl; text-orientation: upright; font-size: 2.4rem; font-weight: 400; color: var(--dark); letter-spacing: 10px; margin-bottom: 20px; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);}
+        .seal { border: 1px solid var(--red); color: var(--red); font-size: 0.7rem; padding: 5px 3px; writing-mode: vertical-rl; text-orientation: upright; border-radius: 2px; margin-top: 8px; opacity: 0.85; background: rgba(255,255,255,0.5);}
         .seal-nayin { border-color: var(--blue); color: var(--blue); }
 
-        /* ====== 本命六十四卦区 ====== */
+        @keyframes pillarFade { to { opacity: 1; transform: translateY(0); } }
+
+        /* ====== 六十四卦高级排版区 ====== */
         .gua-section {
-            display: flex;
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(201, 160, 99, 0.4);
-            padding: 20px;
-            border-radius: 8px;
-            align-items: center;
-            gap: 25px;
+            position: relative; z-index: 1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+            border: 1px solid rgba(201, 160, 99, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 30px; border-radius: 12px; margin-top: 20px;
         }
-        .gua-svg-box { width: 65px; flex-shrink: 0; }
-        /* 爻线的 SVG 动画 */
-        .yao-line {
-            stroke: var(--blue-dark);
-            stroke-width: 7;
-            stroke-linecap: round;
-            transform-origin: center;
-            opacity: 0;
+        .gua-header { display: flex; align-items: center; gap: 25px; margin-bottom: 25px; border-bottom: 1px dashed rgba(201, 160, 99, 0.4); padding-bottom: 20px;}
+        .gua-svg-box { width: 60px; flex-shrink: 0; }
+        
+        /* 爻线的精准样式，等待 Observer 触发 */
+        .yao-line { stroke: var(--blue-dark); stroke-width: 8; stroke-linecap: round; transform-origin: center; opacity: 0; }
+        @keyframes drawYao { 
+            0% { opacity: 0; transform: scaleX(0); } 
+            100% { opacity: 1; transform: scaleX(1); } 
         }
-        .yao-animate { animation: drawYao 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes drawYao {
-            from { opacity: 0; transform: scaleX(0); }
-            to { opacity: 1; transform: scaleX(1); }
+        
+        .gua-title-area { flex: 1; }
+        .gua-badge { display: inline-block; background: var(--gold); color: #fff; font-size: 0.75rem; padding: 3px 10px; border-radius: 2px; margin-bottom: 10px; letter-spacing: 2px;}
+        .gua-name { font-size: 2rem; color: var(--blue-dark); font-weight: 900; letter-spacing: 6px; }
+        
+        .gua-content { text-align: justify; }
+        .gua-classical { font-size: 1.05rem; color: var(--blue); font-weight: 600; line-height: 1.8; margin-bottom: 20px; letter-spacing: 1.5px; position: relative; padding-left: 20px;}
+        .gua-classical::before { content: '『'; position: absolute; left: -5px; top: -5px; font-size: 1.5rem; opacity: 0.5; color: var(--gold);}
+        .gua-classical::after { content: '』'; font-size: 1.5rem; opacity: 0.5; color: var(--gold); position: relative; top: 5px; right: -5px;}
+        
+        .gua-psycho { font-family: var(--font-sans); font-size: 0.95rem; color: var(--gray); line-height: 1.8; border-left: 4px solid var(--green); padding-left: 15px; background: rgba(43, 122, 90, 0.05); padding: 15px 15px 15px 20px; border-radius: 0 8px 8px 0;}
+        .gua-psycho strong { color: var(--blue-dark); font-weight: 600; font-family: var(--font-main); font-size: 1.05rem;}
+
+        /* ====== 历史纪要区 ====== */
+        .history-section { margin-top: 50px; padding-top: 30px; border-top: 1px dashed rgba(201, 160, 99, 0.4); display: none; }
+        .history-title { text-align: center; font-size: 0.85rem; color: var(--blue); letter-spacing: 6px; margin-bottom: 20px; font-weight: 600;}
+        .history-list { display: flex; flex-direction: column; gap: 10px; }
+        .history-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; border-radius: 8px; background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.6); cursor: pointer; transition: 0.3s;
         }
+        .history-item:hover { background: rgba(255,255,255,0.9); transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); border-color: var(--gold);}
+        .h-name { font-weight: 900; color: var(--blue-dark); font-size: 1.1rem; letter-spacing: 2px;}
+        .h-gua { font-size: 0.85rem; color: var(--green); border: 1px solid var(--green); padding: 2px 8px; border-radius: 12px; letter-spacing: 1px;}
+        .h-date { font-size: 0.8rem; color: #888; font-family: var(--font-sans);}
+        
+        .btn-clear { background: none; border: none; color: var(--red); opacity: 0.5; font-size: 0.85rem; letter-spacing: 3px; cursor: pointer; display: block; margin: 30px auto 0; transition: 0.3s; font-family: var(--font-main);}
+        .btn-clear:hover { opacity: 1; transform: scale(1.05);}
 
-        .gua-text-box { flex: 1; }
-        .gua-badge { display: inline-block; background: var(--gold); color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; margin-bottom: 8px; letter-spacing: 2px;}
-        .gua-name { font-size: 1.4rem; color: var(--blue-dark); font-weight: 600; margin-bottom: 8px; letter-spacing: 3px; }
-        .gua-desc { font-size: 0.9rem; color: var(--dark); line-height: 1.6; opacity: 0.85; }
-
-        @keyframes fadeInResult { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* 手机端深度适配 */
         @media (max-width: 600px) {
-            .glass-panel { padding: 30px 20px; width: 92%; margin: 0 auto; }
-            .header h1 { font-size: 1.8rem; letter-spacing: 8px; text-indent: 8px;}
+            .glass-panel { padding: 30px 20px; width: 94%; }
+            .header h1 { font-size: 1.8rem; }
             .form-grid { gap: 15px 10px; }
             .input-group { grid-column: span 3; } 
-            .bazi-layout { gap: 10px; justify-content: space-around; }
-            .bazi-text { font-size: 1.6rem; letter-spacing: 6px; }
-            .gua-section { flex-direction: column; text-align: center; padding: 15px;}
+            .input-group.full { grid-column: span 6; }
+            .bazi-layout { gap: 10px; }
+            .bazi-text { font-size: 1.8rem; }
+            .gua-header { flex-direction: column; text-align: center; }
+            .gua-classical::before, .gua-classical::after { display: none; }
         }
     </style>
 </head>
@@ -175,26 +180,31 @@
 
     <div class="glass-panel">
         <div class="header">
-            <h1>八字与本命卦</h1>
+            <h1>乾坤推演</h1>
             <div class="header-line"></div>
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" id="tab-solar" onclick="switchTab('solar')">公历</button>
-            <button class="tab-btn" id="tab-lunar" onclick="switchTab('lunar')">农历</button>
+            <button class="tab-btn active" id="tab-solar" onclick="switchTab('solar')">公历排盘</button>
+            <button class="tab-btn" id="tab-lunar" onclick="switchTab('lunar')">农历排盘</button>
         </div>
 
         <div class="form-grid">
+            <div class="input-group full">
+                <label>命主尊号</label>
+                <input type="text" id="in-name" placeholder="请输入姓名或称呼 (为您留存纪要)" autocomplete="off">
+            </div>
+
             <div class="input-group">
-                <label>年 (YYYY)</label>
+                <label>生年 (YYYY)</label>
                 <input type="number" id="in-year" pattern="[0-9]*" inputmode="numeric">
             </div>
             <div class="input-group">
-                <label>月 (MM)</label>
+                <label>生月 (MM)</label>
                 <input type="number" id="in-month" pattern="[0-9]*" inputmode="numeric">
             </div>
             <div class="input-group">
-                <label>日 (DD)</label>
+                <label>生日 (DD)</label>
                 <input type="number" id="in-day" pattern="[0-9]*" inputmode="numeric">
             </div>
             <div class="input-group">
@@ -205,12 +215,11 @@
                 <label>分钟 (0-59)</label>
                 <input type="number" id="in-minute" pattern="[0-9]*" inputmode="numeric">
             </div>
-            <!-- 新增性别选项 -->
             <div class="input-group">
                 <label>性别</label>
                 <div class="gender-toggle">
-                    <button class="gender-btn active" id="btn-male" onclick="setGender(1)">乾(男)</button>
-                    <button class="gender-btn" id="btn-female" onclick="setGender(0)">坤(女)</button>
+                    <button class="gender-btn active" id="btn-male" onclick="setGender(1)">乾男</button>
+                    <button class="gender-btn" id="btn-female" onclick="setGender(0)">坤女</button>
                 </div>
             </div>
             
@@ -252,31 +261,102 @@
                 </div>
             </div>
 
-            <!-- 新增：六十四卦展示区 -->
             <div class="gua-section" id="gua-section" style="display: none;">
-                <div class="gua-svg-box" id="gua-svg-box">
-                    <!-- SVG 将通过 JS 动态注入 -->
+                <div class="gua-header">
+                    <div class="gua-svg-box" id="gua-svg-box"></div>
+                    <div class="gua-title-area">
+                        <div class="gua-badge">梅花易数 · 本命卦</div>
+                        <div class="gua-name" id="gua-name"></div>
+                    </div>
                 </div>
-                <div class="gua-text-box">
-                    <div class="gua-badge">梅花易数 · 本命卦</div>
-                    <div class="gua-name" id="gua-name"></div>
-                    <div class="gua-desc" id="gua-desc"></div>
+                <div class="gua-content">
+                    <div class="gua-classical" id="gua-class"></div>
+                    <div class="gua-psycho" id="gua-psych"></div>
                 </div>
             </div>
         </div>
+
+        <div class="history-section" id="history-section">
+            <div class="history-title">—— 推 演 纪 要 ——</div>
+            <div class="history-list" id="history-list"></div>
+            <!-- 加了一点人情味的清空按钮 -->
+            <button class="btn-clear" onclick="clearHistory()">🧹 清空所有尘缘纪要</button>
+        </div>
     </div>
 
-    <!-- 易经核心逻辑与 64 卦数据库 -->
     <script>
-        // PWA 注册
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
-        }
+        // ====== 完整无阉割版 64卦 顶级数据库 ======
+        const trigramYao = { 1:[1,1,1], 2:[1,1,0], 3:[1,0,1], 4:[1,0,0], 5:[0,1,1], 6:[0,1,0], 7:[0,0,1], 8:[0,0,0] };
+        
+        const hexData = {
+            "1-1": { n:"乾为天", c:"天行健，君子以自强不息。六爻皆阳，至刚至健，元亨利贞。", p:"<strong>【创世者原型】</strong>极具领导力与开创精神，自我驱动力极高。面对逆境具备极强的反脆弱性，天生适合在充满挑战的领域担任决策者。需警惕过度自我导致的孤独感。" },
+            "1-2": { n:"天泽履", c:"上天下泽，君子以辨上下，定民志。履虎尾，不咥人，亨。", p:"<strong>【外交家原型】</strong>深谙人情世故与社交边界感。外表柔和谦逊，内心却极有主见与底线。能够在危险或高压的环境中游刃有余，是以柔克刚的典范。" },
+            "1-3": { n:"天火同人", c:"天与火，君子以类族辨物。上下和同，光明磊落，利涉大川。", p:"<strong>【盟主原型】</strong>极具团队精神与理想主义色彩。热情开朗，总能跨越圈层结交志同道合之士。属于高能量人格，适合从事公共与社群事业。" },
+            "1-4": { n:"天雷无妄", c:"天下雷行，物与无妄。顺乎自然，不抱非分之想，元亨利贞。", p:"<strong>【纯真者原型】</strong>率直纯真，不矫揉造作。行事遵循本心与客观规律，极度讨厌内耗与算计。这种干净纯粹的性格往往能获得意想不到的好运。" },
+            "1-5": { n:"天风姤", c:"天下有风，君子以施命诰四方。柔遇刚，女壮，勿用取女。", p:"<strong>【灵动者原型】</strong>心思敏捷，社交能力强，充满魅力。人生中常有奇妙的邂逅与机遇，善于捕捉转瞬即逝的风口，但需培养长期坚持的定力。" },
+            "1-6": { n:"天水讼", c:"天与水违行，君子以作事谋始。内外不合，刚健遇险，不利涉大川。", p:"<strong>【辩证者原型】</strong>思维敏捷，逻辑严密，具有强烈的批判性思维。口才极佳，但也容易陷入人际摩擦。需学习在“坚持原则”与“圆融处世”间寻找平衡。" },
+            "1-7": { n:"天山遁", c:"天下有山，君子以远小人，不恶而严。退避隐退，藏锋守拙。", p:"<strong>【隐士原型】</strong>内心清高，向往自由，具有极高的精神追求。不慕世俗虚荣，懂得在鼎盛时期功成身退，是具有大智慧和大格局的超脱者。" },
+            "1-8": { n:"天地否", c:"天地不交，君子以俭德辟难。闭塞不通，不利君子贞。", p:"<strong>【独立者原型】</strong>性格相对内敛防备，习惯于自我保护与独立思考。在纷扰的世界中具有清醒的边界感。适时敞开心扉会有奇遇。" },
+            "2-1": { n:"泽天夬", c:"泽上于天，君子以施禄及下。刚决柔，果断决绝，利有攸往。", p:"<strong>【破局者原型】</strong>雷厉风行，决断力极强。敢于直面问题并手起刀落解决麻烦。具有强烈的改革精神，但行事需注意刚柔并济，切忌过于冒进。" },
+            "2-2": { n:"兑为泽", c:"丽泽，君子以朋友讲习。喜悦沟通，内外皆悦，利贞。", p:"<strong>【演说家原型】</strong>极其讨喜，幽默风趣。语言表达能力极强，是绝佳的沟通者和情绪价值提供者。只要保持内心的真诚，一生人脉与桃花极旺。" },
+            "2-3": { n:"泽火革", c:"泽中有火，君子以治历明时。顺天应人，变革创新，悔亡。", p:"<strong>【革新者原型】</strong>求新求变，具有破旧立新的勇气。不满足于一成不变的生活，时代的每一次剧变都是你乘风破浪的最佳舞台。" },
+            "2-4": { n:"泽雷随", c:"泽中有雷，君子以向晦入宴息。顺应时势，从善如流，元亨利贞。", p:"<strong>【顺流者原型】</strong>适应力极强，平易近人。不钻牛角尖，懂得顺水推舟，这种松弛感能让你在不知不觉中获得众人的追随与支持。" },
+            "2-5": { n:"泽风大过", c:"泽灭木，君子以独立不惧。栋桡之危，才华超群，利有攸往。", p:"<strong>【超凡者原型】</strong>能力拔尖，常担重任。行事风格特立独行，敢于承担常人不敢承担的风险，注定要在人生中成就一番非凡的“大过”之事。" },
+            "2-6": { n:"泽水困", c:"泽无水，君子以致命遂志。身处困境，坚守底线，有言不信。", p:"<strong>【坚韧者原型】</strong>抗压能力惊人。早年可能经历资源的匮乏或环境的压抑，但这种困境会锻造出你钢铁般的意志，大器晚成，绝地反击。" },
+            "2-7": { n:"泽山咸", c:"山上有泽，君子以虚受人。心有灵犀，互相感应，取女吉。", p:"<strong>【共情者原型】</strong>直觉极其敏锐，感情丰富细腻。能够瞬间洞察他人的情绪波动，极具个人魅力与艺术感染力，天生具备治愈他人的力量。" },
+            "2-8": { n:"泽地萃", c:"泽上于地，君子以除戎器。精英荟萃，繁荣聚集，利见大人。", p:"<strong>【聚核者原型】</strong>具有强大的磁场与魅力。如同水流汇聚，能够轻松吸引优秀的人才与财富向自己靠拢。极具商业头脑与组织调配能力。" },
+            "3-1": { n:"火天大有", c:"火在天上，君子以遏恶扬善。如日中天，顺天依时，元亨。", p:"<strong>【丰盛者原型】</strong>气场强大，福气深厚。自带阳光与感染力，生来具有极高的成就潜力与格局。胸襟开阔，乐于分享，总能吸引贵人相助。" },
+            "3-2": { n:"火泽睽", c:"上火下泽，君子以同而异。求同存异，背道而驰，小事吉。", p:"<strong>【异见者原型】</strong>眼光独特，看问题视角新颖。不喜欢随大流，适合做独立创作者或行业内的“颠覆者”。在求同存异中能发挥巨大的创造力。" },
+            "3-3": { n:"离为火", c:"明两作，大人以继明照于四方。光明华丽，依附而盛，畜牝牛吉。", p:"<strong>【发光者原型】</strong>热情似火，才华横溢。追求美感与艺术境界，像火一样需要依附可燃物，找到优秀的平台或伴侣，就能散发出耀眼的光芒。" },
+            "3-4": { n:"火雷噬嗑", c:"雷电皆至，先王以明罚敕法。刚柔相济，刑罚明察，利用狱。", p:"<strong>【裁决者原型】</strong>黑白分明，嫉恶如仇。具有极强的执行力与正义感。遇到阻碍时，具有一种“咬碎骨头”的果敢，适合从事管理或法务律政工作。" },
+            "3-5": { n:"火风鼎", c:"木上有火，君子以正位凝命。革故鼎新，稳重安祥，元吉亨。", p:"<strong>【重器原型】</strong>格局宏大，稳重可靠。具备化腐朽为神奇的转化能力（如鼎烹饪万物）。一旦找到自己的生态位，就能成为行业的定海神针。" },
+            "3-6": { n:"火水未济", c:"火在水上，君子以慎辨物居方。充满未知，无限可能，小狐汔济。", p:"<strong>【探索者原型】</strong>永远保持好奇心，不甘于平庸的现状。人生充满变数与折腾，但正因如此，生命也拥有了无限的延展性与年轻的活力。" },
+            "3-7": { n:"火山旅", c:"山上有火，君子以明慎用刑，而不留狱。行商客居，漂泊不定。", p:"<strong>【行者原型】</strong>热爱自由，灵魂不受束缚。见多识广，适应多变的环境。人生如同一场精彩的旅行，沿途的风景远比固定的终点更让你着迷。" },
+            "3-8": { n:"火地晋", c:"明出地上，君子以自昭明德。旭日东升，晋升明鉴，康侯用锡马蕃庶。", p:"<strong>【晨曦者原型】</strong>充满朝气，积极进取。事业心强，人生轨迹如同初升的太阳，步步高升。光明磊落的性格让你在职场中备受器重。" },
+            "4-1": { n:"雷天大壮", c:"雷在天上，君子以非礼弗履。阳气隆盛，刚健有力，利贞。", p:"<strong>【冲锋者原型】</strong>精力充沛，气场强大。行事果敢，具有雷霆万钧之势。但需注意克制情绪，修炼“知止”的智慧，避免因冲动而招致反噬。" },
+            "4-2": { n:"雷泽归妹", c:"泽上有雷，君子以永终知敝。违背常理，感情用事，征凶，无攸利。", p:"<strong>【至情者原型】</strong>重情重义，甚至带有飞蛾扑火的浪漫主义色彩。容易被感情左右判断，人生课题是学习如何在感性与理智之间建立防火墙。" },
+            "4-3": { n:"雷火丰", c:"雷电皆至，君子以折狱致刑。日中则昃，丰盛至极，宜日中。", p:"<strong>【极客原型】</strong>才华爆棚，爆发力极强。容易在短时间内攀上人生巅峰，享受光芒万丈。但需铭记盛极必衰的道理，学会未雨绸缪，保持谦逊。" },
+            "4-4": { n:"震为雷", c:"洊雷，君子以恐惧修省。雷声震恐，从容不迫，震惊百里。", p:"<strong>【大心脏原型】</strong>行动派，敢闯敢拼。临危不惧，内心十分强大。外界越是动荡不安，越能激发你的斗志与潜能，是乱世中能成就大业的人格。" },
+            "4-5": { n:"雷风恒", c:"雷风，君子以立不易方。长久安稳，持之以恒，利有攸往。", p:"<strong>【守恒者原型】</strong>极具恒心与契约精神。忠诚可靠，情绪稳定。在快节奏的社会中，这种“长期主义”的特质极为稀缺，是不可多得的伴侣与基石。" },
+            "4-6": { n:"雷水解", c:"雷雨作，君子以赦过宥罪。冰雪消融，化险为夷，利西南。", p:"<strong>【破冰者原型】</strong>心胸豁达，善于原谅与放下。拥有轻松化解危机与矛盾的天赋。总是能将紧张的局势舒缓，是身边人的解语花与烦恼粉碎机。" },
+            "4-7": { n:"雷山小过", c:"山上有雷，君子以行过乎恭。阴暗过渡，不可大事，飞鸟遗之音。", p:"<strong>【匠人原型】</strong>心思极其细腻，注重细节。不追求宏大叙事，但在自己的专业小领域里能做到极致。适合做精密细致的技术、财务或研究工作。" },
+            "4-8": { n:"雷地豫", c:"雷出地奋，先王以作乐崇德。顺时依势，欢乐和乐，利建侯行师。", p:"<strong>【乐天派原型】</strong>天性乐观，懂得享受生活。拥有极佳的艺术细胞与幽默感。总能用轻松愉快的方式感染周围的人，在快乐中就把事情办成了。" },
+            "5-1": { n:"风天小畜", c:"风行天上，君子以懿文德。积蓄力量，密云不雨，自我修养。", p:"<strong>【沉淀者原型】</strong>性格温和细腻，做事循序渐进。不喜张扬，善于在日常中储蓄财富与知识。属于稳扎稳打的“大器晚成”型人格。" },
+            "5-2": { n:"风泽中孚", c:"泽上有风，君子以议狱缓死。诚实守信，感化人心，豚鱼吉。", p:"<strong>【真诚者原型】</strong>内心纯粹，极具亲和力与信任感。能够用真心打动所有人，甚至化敌为友。这种至诚的人格是你在商业和人际中最大的底牌。" },
+            "5-3": { n:"风火家人", c:"风自火出，君子以言有物而行有恒。男主外女主内，和睦相处，利女贞。", p:"<strong>【守护者原型】</strong>极具家庭观念，温馨体贴。善于营造归属感与安全感。无论在家庭还是在公司团队中，你都是那个让大家心安的“大家长”。" },
+            "5-4": { n:"风雷益", c:"风雷，君子以见善则迁。损上益下，大有作为，利有攸往。", p:"<strong>【赋能者原型】</strong>乐于助人，具有极高的社会责任感。信奉利他即是利己的哲学，贵人运极佳。你付出的善意，总会以成倍的好运回报给你。" },
+            "5-5": { n:"巽为风", c:"随风，君子以申命行事。柔顺谦逊，无孔不入，小亨。", p:"<strong>【灵通者原型】</strong>八面玲珑，灵活变通。洞察力强，能够顺应甚至穿透任何复杂的圈子。像风一样不拘定法，却能潜移默化地影响一切。" },
+            "5-6": { n:"风水涣", c:"风行水上，先王以享于帝立庙。乘风破浪，离散冰释，利涉大川。", p:"<strong>【破壁者原型】</strong>思想前卫，不拘一格。善于打破僵局和传统束缚。当旧有的体系变得腐朽时，你就是那个吹散阴霾、带来全新希望的变革之风。" },
+            "5-7": { n:"风山渐", c:"山上有木，君子以居贤德善俗。循序渐进，缓慢发展，女归吉。", p:"<strong>【种树者原型】</strong>做事极有条理，不急不躁。信奉“慢即是快”的哲学，步步为营。基础打得比任何人都扎实，最终的成就往往极其深远稳固。" },
+            "5-8": { n:"风地观", c:"风行地上，先王以省方观民设教。仰视高看，体察万物，盥而不荐。", p:"<strong>【观察者原型】</strong>洞察力惊人，思维深邃。习惯退后一步审视全局，具有哲学家的上帝视角。看破不说破，能在静观其变中掌握事物的核心本质。" },
+            "6-1": { n:"水天需", c:"云上于天，君子以饮食宴乐。密云不雨，待时而动，有孚，光亨。", p:"<strong>【守望者原型】</strong>极具耐心与战略定力。性格沉稳，懂得延迟满足。能够在逆境中蛰伏并自我充实，一旦时机成熟便能一击必中。" },
+            "6-2": { n:"水泽节", c:"泽上有水，君子以制数度。适可而止，节制有度，亨，苦节不可贞。", p:"<strong>【自律者原型】</strong>自控力极强，作息与消费都极具规律。有着清晰的个人底线和原则，拒绝无意义的消耗。高度的自律为你换来了真正的自由。" },
+            "6-3": { n:"水火既济", c:"水在火上，君子以思患而预防之。阴阳和谐，功成名就，初吉终乱。", p:"<strong>【圆融者原型】</strong>各方面能力均衡，早年易取得成功。骨子里具有居安思危的忧患意识。性格成熟缜密，做事滴水不漏，是完美的执行者。" },
+            "6-4": { n:"水雷屯", c:"云雷屯，君子以经纶。万物始生，艰难险阻，宜建侯而不宁。", p:"<strong>【拓荒者原型】</strong>具有草创精神。属于在混乱与未知中寻找秩序的人格。早年多波折，但阅历的积累会转化为巨大的生存智慧与抗压能力。" },
+            "6-5": { n:"水风井", c:"木上有水，君子以劳民劝相。源源不断，滋养万物，改邑不改井。", p:"<strong>【滋养者原型】</strong>内心世界极其丰富，像一口深井般充满智慧与清凉。默默无闻却不可或缺，乐于奉献，你的存在本身就是在滋养身边的环境。" },
+            "6-6": { n:"坎为水", c:"水洊至，君子以常德行。重重险阻，随波逐流，习坎，有孚，维心亨。", p:"<strong>【深潜者原型】</strong>极度聪明，心思深沉。能在最复杂、最凶险的环境中生存下来。水利万物而不争，你拥有着常人难以企及的深邃与韧性。" },
+            "6-7": { n:"水山蹇", c:"山上有水，君子以反身修德。前途艰险，知难而退，利西南，不利东北。", p:"<strong>【反省者原型】</strong>性格谨慎，防备心重。做事求稳，善于规避人生风险。遇到阻碍时不会死磕，而是懂得向内反省、提升自我，以柔克刚。" },
+            "6-8": { n:"水地比", c:"地上有水，先王以建万国，亲诸侯。水土交融，互相依附，吉。", p:"<strong>【协调者原型】</strong>人际交往中的粘合剂。高情商、平易近人，具备极强的合作精神与共情力。总是能敏锐地找到人际关系中的利益契合点。" },
+            "7-1": { n:"山天大畜", c:"天在山中，君子以多识前言往行。大量积蓄，底蕴深厚，利贞。", p:"<strong>【博学者原型】</strong>博闻强识，内存丰富。有着海纳百川的胸怀与惊人的学习能力。就像一座藏着宝藏的大山，越是深入了解，越会被你的底蕴折服。" },
+            "7-2": { n:"山泽损", c:"山下有泽，君子以惩忿窒欲。损下益上，吃亏是福，有孚，元吉。", p:"<strong>【奉献者原型】</strong>懂得舍得的智慧。具有适当的牺牲精神，愿意成全他人或顾全大局。这种看似“吃亏”的格局，最终必会为你带来长远的丰厚善报。" },
+            "7-3": { n:"山火贲", c:"山下有火，君子以明庶政，无敢折狱。注重仪容，文采斐然，亨，小利有攸往。", p:"<strong>【美学家原型】</strong>品位极高，极具审美与艺术修养。注重生活的仪式感与体面。你的存在为枯燥的现实世界增添了一抹极其优雅华丽的色彩。" },
+            "7-4": { n:"山雷颐", c:"山下有雷，君子以慎言语，节饮食。修身养性，言语谨慎，贞吉。", p:"<strong>【修道者原型】</strong>极度注重身心健康与内在涵养。言辞得体，行事稳重端庄。能够控制自己的欲望与嘴巴，是一种极高的人格修行。" },
+            "7-5": { n:"山风蛊", c:"山下有风，君子以振民育德。除旧布新，挽救危机，元亨，利涉大川。", p:"<strong>【治愈者原型】</strong>天生的医生与改革家。善于发现系统中的腐败漏洞或病灶，并敢于动刀子修复。属于能够在废墟中重建秩序的狠角色。" },
+            "7-6": { n:"山水蒙", c:"山下出泉，君子以果行育德。启蒙、发轫之象，童蒙求我。", p:"<strong>【求知者原型】</strong>保持着强烈的求知欲与童心。一生都在寻找人生的导师或真理，遇良师益友则能激发出无穷的潜能与创造力。" },
+            "7-7": { n:"艮为山", c:"兼山，君子以思不出其位。静止不动，安分守己，艮其背，不获其身。", p:"<strong>【如山者原型】</strong>极为可靠，沉稳如山。定力极强，外界的风吹草动难以动摇你的心智。明白自己的边界与位置，给人以极大的安全感。" },
+            "7-8": { n:"山地剥", c:"山附于地，上以厚下安宅。阴盛阳衰，剥落退败，不利有攸往。", p:"<strong>【蛰伏者原型】</strong>危机意识极强。擅长在低谷与恶劣环境中隐忍生存。懂得审时度势，绝不盲目出头，静静等待阳气复苏的最佳时机。" },
+            "8-1": { n:"地天泰", c:"天地交，后以财成天地之道。阴阳和合，万物通泰，小往大来。", p:"<strong>【通达者原型】</strong>自带祥瑞之气的极佳命局。心态极其平和旷达，遇事总能逢凶化吉。能够将不同性格的人或资源完美融合，一生顺遂。" },
+            "8-2": { n:"地泽临", c:"泽上有地，君子以教思无穷。居高临下，亲自督导，元亨利贞。", p:"<strong>【导师原型】</strong>具有强烈的责任感与领导风范。喜欢亲力亲为指导后辈，极具教育家精神。你的权威不是来自压迫，而是来自于令人信服的关怀。" },
+            "8-3": { n:"地火明夷", c:"明入地中，君子以莅众，用晦而明。光明受挫，内明外暗，利艰贞。", p:"<strong>【守心者原型】</strong>大智若愚，善于隐藏自己的锋芒。在黑暗或不公的环境中，依然能在内心深处守护光明的初心，具有常人难以企及的隐忍与坚守。" },
+            "8-4": { n:"地雷复", c:"雷在地中，先王以至日闭关。剥极必复，生机重现，亨。", p:"<strong>【重生者原型】</strong>复原力极强，跌倒了总能迅速爬起。生命中充满了触底反弹的奇迹，每一次挫折都只是为你积攒下一次爆发的能量。" },
+            "8-5": { n:"地风升", c:"地中生木，君子以顺德。柔顺上进，步步高升，元亨，用见大人。", p:"<strong>【攀登者原型】</strong>进取心极强，懂得借力打力。像一棵树苗在泥土中默默向上生长，不声不响间便已长成参天大树，职场或人生总能稳步攀升。" },
+            "8-6": { n:"地水师", c:"地中有水，君子以容民畜众。聚众兴师，丈人吉，无咎。", p:"<strong>【统帅者原型】</strong>天生的组织者与指挥官。具备卓越的宏观调控能力和危机处理能力。性格坚毅不拔，能够在复杂的斗争环境中凝聚团队。" },
+            "8-7": { n:"地山谦", c:"地中有山，君子以裒多益寡。谦受益，满招损，亨，君子有终。", p:"<strong>【至善者原型】</strong>《易经》中唯一的六爻皆吉之卦。实力极其强大却又极其低调谦逊。如大地包容高山，这种虚怀若谷的人格，人皆敬仰，必有善终。" },
+            "8-8": { n:"坤为地", c:"地势坤，君子以厚德载物。含弘光大，品物咸亨，牝马之贞。", p:"<strong>【承载者原型】</strong>极具包容力与同理心。能够敏锐感知他人需求，是团队中不可或缺的支持系统与治愈者，拥有润物细无声的强大后劲。" }
+        };
 
-        let currentMode = 'solar';
-        let currentGender = 1; // 1男 0女
+        let historyData =[];
 
-        // 页面加载预填
         window.onload = () => {
             const now = new Date();
             document.getElementById('in-year').value = now.getFullYear();
@@ -284,107 +364,29 @@
             document.getElementById('in-day').value = now.getDate();
             document.getElementById('in-hour').value = now.getHours();
             document.getElementById('in-minute').value = now.getMinutes();
+            loadHistory();
         };
 
-        function switchTab(mode) {
-            currentMode = mode;
-            document.getElementById('tab-solar').classList.remove('active');
-            document.getElementById('tab-lunar').classList.remove('active');
-            document.getElementById('tab-' + mode).classList.add('active');
-            document.getElementById('lunar-options').style.display = (mode === 'lunar') ? 'flex' : 'none';
-        }
-
         function setGender(val) {
-            currentGender = val;
+            window.currentGender = val;
             document.getElementById('btn-male').classList.remove('active');
             document.getElementById('btn-female').classList.remove('active');
             if(val === 1) document.getElementById('btn-male').classList.add('active');
             else document.getElementById('btn-female').classList.add('active');
         }
+        setGender(1); 
 
-        // ====== 易经六十四卦高精度数据库 (上卦-下卦) ======
-        // 八卦序号: 1乾(天) 2兑(泽) 3离(火) 4震(雷) 5巽(风) 6坎(水) 7艮(山) 8坤(地)
-        // 爻象数组 (由下至上 0为阴 1为阳)
-        const trigramYao = {
-            1: [1,1,1], 2:[1,1,0], 3: [1,0,1], 4:[1,0,0], 
-            5: [0,1,1], 6: [0,1,0], 7: [0,0,1], 8: [0,0,0]
-        };
+        function switchTab(mode) {
+            window.currentMode = mode;
+            document.getElementById('tab-solar').classList.remove('active');
+            document.getElementById('tab-lunar').classList.remove('active');
+            document.getElementById('tab-' + mode).classList.add('active');
+            document.getElementById('lunar-options').style.display = (mode === 'lunar') ? 'flex' : 'none';
+        }
+        switchTab('solar');
 
-        const hexagramData = {
-            "1-1": { n: "乾为天", d: "大吉。六爻皆阳，刚健中正。特质：天生领袖，刚毅果断，自强不息，极具开创力。" },
-            "1-2": { n: "天泽履", d: "吉。如履薄冰，外刚内悦。特质：知书达理，讲究分寸，行事谨慎而能得人欢心。" },
-            "1-3": { n: "天火同人", d: "大吉。上下和同，光明磊落。特质：极佳的人缘与团队精神，热情开朗，善于交际。" },
-            "1-4": { n: "天雷无妄", d: "平。顺乎自然，不抱非分之想。特质：率直纯真，不矫揉造作，能守正道。" },
-            "1-5": { n: "天风姤", d: "中。风遇天下，柔遇刚。特质：心思敏捷，社交能力强，容易在人群中脱颖而出。" },
-            "1-6": { n: "天水讼", d: "凶。内险外刚，易起争端。特质：口才佳，好辩论，具有极强的法律与维权意识。" },
-            "1-7": { n: "天山遁", d: "中。退避隐退，藏锋守拙。特质：内心清高，向往自由，懂得进退之道，不慕虚荣。" },
-            "1-8": { n: "天地否", d: "凶。天地不交，闭塞不通。特质：性格内向沉稳，习惯自我保护，需警惕固执己见。" },
-            
-            "2-1": { n: "泽天夬", d: "中。刚决柔，果断决绝。特质：雷厉风行，决断力极强，敢于突破常规。" },
-            "2-2": { n: "兑为泽", d: "吉。喜悦沟通，内外皆悦。特质：极其讨喜，幽默风趣，是绝佳的沟通者和演说家。" },
-            "2-3": { n: "泽火革", d: "吉。顺天应人，变革创新。特质：求新求变，具有改革精神和破旧立新的勇气。" },
-            "2-4": { n: "泽雷随", d: "吉。顺应时势，从善如流。特质：适应力极强，平易近人，懂得顺水推舟。" },
-            "2-5": { n: "泽风大过", d: "中。栋桡之危，才华超群。特质：能力拔尖，常担重任，但行事容易特立独行。" },
-            "2-6": { n: "泽水困", d: "凶。身处困境，坚守底线。特质：抗压能力强，大器晚成，在逆境中方显英雄本色。" },
-            "2-7": { n: "泽山咸", d: "大吉。心有灵犀，互相感应。特质：极具共情力，感情丰富，直觉准确，人缘极好。" },
-            "2-8": { n: "泽地萃", d: "大吉。精英荟萃，繁荣聚集。特质：具有磁性魅力，能够吸引人才与财富，组织力强。" },
-
-            "3-1": { n: "火天大有", d: "大吉。如日中天，顺天依时。特质：福气深厚，胸襟开阔，生来具有极高的成就潜力。" },
-            "3-2": { n: "火泽睽", d: "中。求同存异，背道而驰。特质：眼光独特，看问题视角新颖，适合做独立创作者。" },
-            "3-3": { n: "离为火", d: "中。光明华丽，依附而盛。特质：热情似火，才华横溢，追求美感与艺术境界。" },
-            "3-4": { n: "火雷噬嗑", d: "中。刚柔相济，刑罚明察。特质：黑白分明，嫉恶如仇，具有极强的执行力和正义感。" },
-            "3-5": { n: "火风鼎", d: "大吉。革故鼎新，稳重安祥。特质：格局宏大，稳重可靠，能成为行业的定海神针。" },
-            "3-6": { n: "火水未济", d: "平。充满未知，无限可能。特质：永远保持好奇心，不甘平庸，一生都在探索与追求。" },
-            "3-7": { n: "火山旅", d: "平。行商客居，漂泊不定。特质：热爱自由与旅行，见识广博，适应多变的环境。" },
-            "3-8": { n: "火地晋", d: "吉。旭日东升，晋升明鉴。特质：充满朝气，积极进取，事业心强，步步高升。" },
-
-            "4-1": { n: "雷天大壮", d: "中。阳气隆盛，刚健有力。特质：精力充沛，气场强大，行事果敢但不宜过于冲动。" },
-            "4-2": { n: "雷泽归妹", d: "凶。违背常理，感情用事。特质：重情重义，容易被感情左右，行事需多几分理智。" },
-            "4-3": { n: "雷火丰", d: "吉。日中则昃，丰盛至极。特质：才华爆棚，容易在短时间内取得巨大成就，光芒万丈。" },
-            "4-4": { n: "震为雷", d: "中。雷声震恐，从容不迫。特质：行动派，敢闯敢拼，临危不惧，内心十分强大。" },
-            "4-5": { n: "雷风恒", d: "吉。长久安稳，持之以恒。特质：极具恒心与毅力，忠诚可靠，是难得的长期伴侣或合伙人。" },
-            "4-6": { n: "雷水解", d: "吉。冰雪消融，化险为夷。特质：善于解决问题，心胸豁达，能轻松化解危机与矛盾。" },
-            "4-7": { n: "雷山小过", d: "中。阴暗过渡，不可大事。特质：心思细腻，注重细节，适合做精密细致的技术工作。" },
-            "4-8": { n: "雷地豫", d: "吉。顺时依势，欢乐和乐。特质：天性乐观，懂得享受生活，拥有极佳的艺术细胞。" },
-
-            "5-1": { n: "风天小畜", d: "中。积蓄力量，密云不雨。特质：性格温和，善于储蓄与积累，稳扎稳打，厚积薄发。" },
-            "5-2": { n: "风泽中孚", d: "吉。诚实守信，感化人心。特质：真诚纯粹，极具亲和力，能够用真心打动所有人。" },
-            "5-3": { n: "风火家人", d: "吉。男主外女主内，和睦相处。特质：极具家庭观念，温馨体贴，善于营造归属感。" },
-            "5-4": { n: "风雷益", d: "大吉。损上益下，大有作为。特质：乐于助人，具有极高的社会责任感，贵人运极佳。" },
-            "5-5": { n: "巽为风", d: "中。柔顺谦逊，无孔不入。特质：八面玲珑，灵活变通，洞察力强，能够适应任何圈子。" },
-            "5-6": { n: "风水涣", d: "中。乘风破浪，离散冰释。特质：思想前卫，不拘一格，善于打破僵局和传统束缚。" },
-            "5-7": { n: "风山渐", d: "吉。循序渐进，缓慢发展。特质：做事极有条理，不急不躁，大器晚成，步步为营。" },
-            "5-8": { n: "风地观", d: "中。仰视高看，体察万物。特质：洞察力惊人，思维深邃，具有哲学家的上帝视角。" },
-
-            "6-1": { n: "水天需", d: "中。耐心等待，时机成熟。特质：极具耐心，性格沉稳，懂得在蛰伏中等待最佳时机。" },
-            "6-2": { n: "水泽节", d: "吉。适可而止，节制有度。特质：自律性极强，作息规律，极具原则性和底线。" },
-            "6-3": { n: "水火既济", d: "吉。阴阳和谐，功成名就。特质：各方面均衡发展，性格圆融，容易获得世俗意义的成功。" },
-            "6-4": { n: "水雷屯", d: "凶。万物始生，艰难险阻。特质：草创精神，虽命运多舛但韧性极强，具备创业者基因。" },
-            "6-5": { n: "水风井", d: "吉。源源不断，滋养万物。特质：乐于奉献，内心世界丰富，像一口深井般充满智慧。" },
-            "6-6": { n: "坎为水", d: "凶。重重险阻，随波逐流。特质：极度聪明，城府较深，能在最复杂的环境中生存。" },
-            "6-7": { n: "水山蹇", d: "凶。前途艰险，知难而退。特质：性格谨慎防备心重，做事求稳，善于规避人生风险。" },
-            "6-8": { n: "水地比", d: "吉。水地交融，互相依附。特质：极具合作精神，平易近人，是团队中最好的协调者。" },
-
-            "7-1": { n: "山天大畜", d: "吉。大量积蓄，底蕴深厚。特质：博学多才，内存丰富，有海纳百川的胸怀与实力。" },
-            "7-2": { n: "山泽损", d: "中。损下益上，吃亏是福。特质：具有牺牲精神，愿意成全他人，最终必得善报。" },
-            "7-3": { n: "山火贲", d: "中。注重仪容，文采斐然。特质：品位极高，极具审美与艺术修养，注重生活仪式感。" },
-            "7-4": { n: "山雷颐", d: "吉。修身养性，言语谨慎。特质：注重健康与养生，言辞得体，行事稳重端庄。" },
-            "7-5": { n: "山风蛊", d: "中。除旧布新，挽救危机。特质：天生的改革家与医生，善于发现系统漏洞并加以修复。" },
-            "7-6": { n: "山水蒙", d: "平。启蒙阶段，需要引导。特质：保持童心，求知欲强，遇良师益友则能大放异彩。" },
-            "7-7": { n: "艮为山", d: "平。静止不动，安分守己。特质：极为可靠，沉稳如山，定力强，外界难以动摇其心智。" },
-            "7-8": { n: "山地剥", d: "凶。阴盛阳衰，剥落退败。特质：危机意识极强，擅长在低谷中隐忍生存，等待复苏。" },
-
-            "8-1": { n: "地天泰", d: "大吉。天地交泰，阴阳和谐。特质：一生顺遂安泰，心态平和，自带祥瑞之气，极佳的命格。" },
-            "8-2": { n: "地泽临", d: "吉。居高临下，亲自督导。特质：具有强烈的责任感与领导风范，亲力亲为，令人信服。" },
-            "8-3": { n: "地火明夷", d: "凶。光明受挫，内明外暗。特质：大智若愚，善于隐藏自己的锋芒，在黑暗中守护初心。" },
-            "8-4": { n: "地雷复", d: "吉。剥极必复，生机重现。特质：复原力极强，跌倒了总能迅速爬起，充满无尽的生命力。" },
-            "8-5": { n: "地风升", d: "吉。柔顺上进，步步高升。特质：进取心强，懂得借力打力，能够在职场或人生中稳步攀升。" },
-            "8-6": { n: "地水师", d: "中。聚集众人，兴师动众。特质：具有统帅之才，善于排兵布阵，适合做指挥官或高管。" },
-            "8-7": { n: "地山谦", d: "大吉。谦受益，满招损。特质：最高级的人格，实力极其强大却又极其低调谦逊，人皆敬仰。" },
-            "8-8": { n: "坤为地", d: "大吉。厚德载物，柔顺和顺。特质：极具包容心，稳重踏实，极佳的支持者，母性光辉十足。" }
-        };
-
-        function calculateBazi() {
+        function calculateBazi(isFromHistory = false) {
+            const name = document.getElementById('in-name').value.trim() || "无名居士";
             const y = parseInt(document.getElementById('in-year').value);
             const m = parseInt(document.getElementById('in-month').value);
             const d = parseInt(document.getElementById('in-day').value);
@@ -392,11 +394,11 @@
             const min = parseInt(document.getElementById('in-minute').value);
             const isLeap = document.getElementById('is-leap').checked;
 
-            if (!y || !m || !d) { alert("天地密码未全，请填入完整年月日！"); return; }
+            if (!y || !m || !d) { alert("天地密码未全，请填入完整年月日哦！"); return; }
 
             let solarDate, lunarDate;
             try {
-                if (currentMode === 'solar') {
+                if (window.currentMode === 'solar') {
                     solarDate = Solar.fromYmdHms(y, m, d, h || 0, min || 0, 0);
                     lunarDate = solarDate.getLunar();
                 } else {
@@ -404,19 +406,15 @@
                     lunarDate = Lunar.fromYmdHms(y, lunarMonth, d, h || 0, min || 0, 0);
                     solarDate = lunarDate.getSolar();
                 }
-            } catch (error) {
-                alert("星象有误，请核对输入格式。\n" + error.message); return;
-            }
+            } catch (error) { alert("星象有误，请核对输入。\n" + error.message); return; }
 
             const baZi = lunarDate.getEightChar();
-            // 这里将性别传给八字引擎 (男1 女0)，虽不改变四柱，但若后续开发大运时会非常准确。
-            baZi.setSect(currentGender); 
+            baZi.setSect(window.currentGender); 
 
-            // ===== 1. 渲染八字区 =====
-            const genderStr = currentGender === 1 ? '乾造 (男)' : '坤造 (女)';
+            const genderStr = window.currentGender === 1 ? '乾造 (男)' : '坤造 (女)';
             document.getElementById('date-display').innerHTML = `
-                命主：${genderStr} <br>
-                公历：${solarDate.toYmdHms()} &nbsp;|&nbsp; 农历：${lunarDate.toString()}
+                尊号：<span>${name}</span> &nbsp;|&nbsp; 命主：${genderStr} <br>
+                公历：${solarDate.toYmd()} &nbsp;&nbsp; 农历：${lunarDate.getYearInGanZhi()}年${lunarDate.getMonthInChinese()}月${lunarDate.getDayInChinese()}
             `;
 
             document.getElementById('y-ganzhi').innerText = baZi.getYearGan() + baZi.getYearZhi();
@@ -434,71 +432,153 @@
             document.getElementById('d-nayin').innerText = baZi.getDayNaYin();
             document.getElementById('t-nayin').innerText = baZi.getTimeNaYin();
 
-            // ===== 2. 核心：推演梅花易数本命卦 =====
-            // 取数规则：年支序(子1~亥12) + 月(1-12) + 日(1-30) + 时支序(子1~亥12)
-            const yearZhiNum = lunarDate.getYearZhiIndex() + 1;
-            const monthNum = Math.abs(lunarDate.getMonth());
-            const dayNum = lunarDate.getDay();
-            const hourZhiNum = lunarDate.getTimeZhiIndex() + 1;
-
-            let upperTrigram = (yearZhiNum + monthNum + dayNum) % 8;
-            if (upperTrigram === 0) upperTrigram = 8;
-
-            let lowerTrigram = (yearZhiNum + monthNum + dayNum + hourZhiNum) % 8;
-            if (lowerTrigram === 0) lowerTrigram = 8;
-
-            const hexKey = `${upperTrigram}-${lowerTrigram}`;
-            const hexInfo = hexagramData[hexKey];
+            // === 梅花易数本命卦起卦 ===
+            let up = (lunarDate.getYearZhiIndex() + 1 + Math.abs(lunarDate.getMonth()) + lunarDate.getDay()) % 8 || 8;
+            let low = (lunarDate.getYearZhiIndex() + 1 + Math.abs(lunarDate.getMonth()) + lunarDate.getDay() + lunarDate.getTimeZhiIndex() + 1) % 8 || 8;
+            
+            const hexKey = `${up}-${low}`;
+            let hexInfo = hexData[hexKey];
 
             document.getElementById('gua-name').innerText = hexInfo.n;
-            document.getElementById('gua-desc').innerText = hexInfo.d;
+            document.getElementById('gua-class').innerHTML = hexInfo.c;
+            document.getElementById('gua-psych').innerHTML = hexInfo.p;
 
-            // 绘制动态卦象 SVG
-            drawHexagram(upperTrigram, lowerTrigram);
+            drawHexagram(up, low);
 
-            // ===== 3. 显现动画 =====
+            if(!isFromHistory) {
+                saveHistory({
+                    name, mode: window.currentMode, y, m, d, h, min, isLeap, gender: window.currentGender, 
+                    hexName: hexInfo.n, dateStr: solarDate.toYmd()
+                });
+            }
+
+            // === 极美连动效显现 ===
             const resultBox = document.getElementById('result-box');
-            document.getElementById('gua-section').style.display = 'flex';
             resultBox.style.display = 'block';
-            resultBox.style.animation = 'none';
+            document.getElementById('gua-section').style.display = 'block';
+            
+            // 八字柱子优雅依次浮现
+            const pillars = document.querySelectorAll('.pillar-card');
+            pillars.forEach(p => { p.style.animation = 'none'; p.style.opacity = '0'; });
             resultBox.offsetHeight; 
-            resultBox.style.animation = 'fadeInResult 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards'; 
+            pillars.forEach((p, idx) => {
+                p.style.animation = `pillarFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) ${idx * 0.15}s forwards`;
+            });
+
+            // 如果不是点历史记录触发的，则平滑滚动到底部
+            if(!isFromHistory) {
+                setTimeout(() => {
+                    document.getElementById('gua-section').scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 500);
+            }
         }
 
-        // ====== 绘制动态六爻 SVG ======
+        // ====== IntersectionObserver：滚动到视野才播放六爻动画 ======
         function drawHexagram(upper, lower) {
-            const upYao = trigramYao[upper];
-            const lowYao = trigramYao[lower];
-            // 组合成六爻：从下到上 (0-5)
-            const sixYao = [...lowYao, ...upYao]; 
+            const upYao = trigramYao[upper]; const lowYao = trigramYao[lower];
+            const sixYao =[...lowYao, ...upYao]; 
             
             let svgHtml = `<svg viewBox="0 0 100 130" width="100%" height="100%">`;
-            
-            // 从上往下绘制 (Y坐标递增) -> 对应六爻数组的从上到下 (5 到 0)
-            const yPositions =[15, 35, 55, 80, 100, 120]; // 留出上下卦的间隙 (55 和 80 之间空隙稍大)
+            const yPositions =[15, 35, 55, 80, 100, 120]; 
             
             for(let i=5; i>=0; i--) {
                 const isYang = sixYao[i] === 1;
                 const yPos = yPositions[5-i];
-                const animDelay = (i * 0.15); // 从下往上依次展现 (初爻 i=0 延迟最短 0s)
-                
                 if (isYang) {
-                    // 阳爻：一条长线
-                    svgHtml += `<line x1="5" y1="${yPos}" x2="95" y2="${yPos}" class="yao-line yao-animate" style="animation-delay: ${animDelay}s;" />`;
+                    svgHtml += `<line x1="5" y1="${yPos}" x2="95" y2="${yPos}" class="yao-line" />`;
                 } else {
-                    // 阴爻：两断线
-                    svgHtml += `<line x1="5" y1="${yPos}" x2="42" y2="${yPos}" class="yao-line yao-animate" style="animation-delay: ${animDelay}s;" />`;
-                    svgHtml += `<line x1="58" y1="${yPos}" x2="95" y2="${yPos}" class="yao-line yao-animate" style="animation-delay: ${animDelay}s;" />`;
+                    svgHtml += `<line x1="5" y1="${yPos}" x2="42" y2="${yPos}" class="yao-line" />`;
+                    svgHtml += `<line x1="58" y1="${yPos}" x2="95" y2="${yPos}" class="yao-line" />`;
                 }
             }
             svgHtml += `</svg>`;
             
             const box = document.getElementById('gua-svg-box');
             box.innerHTML = svgHtml;
-            // 重新触发 SVG 动画
-            box.style.display = 'none';
-            box.offsetHeight;
-            box.style.display = 'block';
+
+            // 监听滚动，看见了再画
+            if(window.guaObserver) window.guaObserver.disconnect();
+            window.guaObserver = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting) {
+                    const lines = box.querySelectorAll('.yao-line');
+                    lines.forEach((line, idx) => {
+                        // 动画延迟从下(idx=5)往上递增，古法初爻至上爻
+                        line.style.animation = `drawYao 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) ${idx * 0.18}s forwards`;
+                    });
+                    window.guaObserver.disconnect();
+                }
+            }, { threshold: 0.2 }); 
+            window.guaObserver.observe(box);
+        }
+
+        // ====== 历史纪要逻辑 ======
+        function saveHistory(data) {
+            historyData = historyData.filter(item => item.name !== data.name || item.name === '无名居士');
+            historyData.unshift(data); 
+            if(historyData.length > 8) historyData.pop(); // 增加到保存8条
+            localStorage.setItem('bazi_history', JSON.stringify(historyData));
+            renderHistory();
+        }
+
+        function loadHistory() {
+            const saved = localStorage.getItem('bazi_history');
+            if(saved) {
+                historyData = JSON.parse(saved);
+                renderHistory();
+            }
+        }
+
+        function renderHistory() {
+            const section = document.getElementById('history-section');
+            const list = document.getElementById('history-list');
+            if(historyData.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = 'block';
+            list.innerHTML = '';
+            
+            historyData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <span class="h-name">${item.name}</span>
+                    <span class="h-gua">${item.hexName}</span>
+                    <span class="h-date">${item.dateStr}</span>
+                `;
+                div.onclick = () => loadRecord(index);
+                list.appendChild(div);
+            });
+        }
+
+        function loadRecord(index) {
+            const item = historyData[index];
+            document.getElementById('in-name').value = item.name === '无名居士' ? '' : item.name;
+            document.getElementById('in-year').value = item.y;
+            document.getElementById('in-month').value = item.m;
+            document.getElementById('in-day').value = item.d;
+            document.getElementById('in-hour').value = item.h;
+            document.getElementById('in-minute').value = item.min;
+            document.getElementById('is-leap').checked = item.isLeap;
+            switchTab(item.mode);
+            setGender(item.gender);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            calculateBazi(true);
+        }
+
+        // 加了一点人情味的清空功能
+        function clearHistory() {
+            if(confirm("纪要一旦清空便如风过无痕，确定要舍弃这些缘分记录吗？")) {
+                historyData =
+                localStorage.removeItem('bazi_history'); // 抹除浏览器的记忆
+                renderHistory(); // 刷新界面（历史记录区会自动隐藏）
+                
+                // 增加一点人情味的告别提示
+                setTimeout(() => {
+                    alert("尘缘已了，过往纪要已悉数随风消散。愿您未来的推演皆是上上大吉。");
+                }, 100);
+            }
         }
     </script>
 </body>
