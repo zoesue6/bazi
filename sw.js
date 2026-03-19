@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bazi-v6'; // <--- 关键在这里：每次更新代码，把这个数字加 1
+const CACHE_NAME = 'bazi-v7'; // <--- 关键在这里：每次更新代码，把这个数字加 1
 const urlsToCache =[
     './',
     './index.html',
