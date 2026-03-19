@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <!-- 针对手机端适配的视口设置 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>千里江山 · 极简八字推演</title>
+    <title>千里江山 · 极简八字与本命卦推演</title>
     
-    <!-- PWA 必备：清单文件与 iOS 适配 Meta 标签 -->
+    <!-- PWA 必备 -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#122630">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,25 +16,22 @@
 
     <!-- 引入 Lunar 日历库 -->
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.min.js"></script>
-    <!-- 引入古典中文字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            var-blue-dark: #122630;
             --blue-dark: #122630;   /* 深霁青 */
             --blue: #1C4A61;        /* 霁青 */
             --green: #2B7A5A;       /* 石绿 */
             --gold: #C9A063;        /* 泥金 */
             --dark: #2C2C2C;        /* 焦墨 */
             --red: #8B2C24;         /* 朱砂 */
-            --glass-bg: rgba(245, 245, 240, 0.65); /* 稍微增加不透明度，防止彩色背景干扰文字 */
+            --glass-bg: rgba(245, 245, 240, 0.65); 
             
             --font-main: 'Noto Serif SC', serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* 手机端适配：允许上下滚动，防止被键盘遮挡 */
         body {
             font-family: var(--font-main);
             color: var(--dark);
@@ -48,13 +45,11 @@
             padding: 20px 0;
         }
 
-        /* ====== 背景图：虚实相生动效 (修改为生机勃勃的彩色) ====== */
+        /* ====== 背景图：虚实相生动效 ====== */
         .bg-image {
             position: fixed;
-            top: -10vh; 
-            left: -5vw;
-            width: 110vw; 
-            height: 120vh; 
+            top: -10vh; left: -5vw;
+            width: 110vw; height: 120vh; 
             background-image: url('1.png');
             background-size: cover;
             background-position: center;
@@ -63,15 +58,8 @@
         }
 
         @keyframes introBg {
-            0% { 
-                filter: blur(0px) brightness(1.1) saturate(1); 
-                transform: scale(1.05); 
-            }
-            100% { 
-                /* 最终态：去掉灰白，仅虚化并稍微压暗，提高色彩饱和度，生机盎然！ */
-                filter: blur(12px) brightness(0.75) saturate(1.3); 
-                transform: scale(1); 
-            }
+            0% { filter: blur(0px) brightness(1.1) saturate(1); transform: scale(1.05); }
+            100% { filter: blur(12px) brightness(0.75) saturate(1.3); transform: scale(1); }
         }
 
         /* ====== 主控制面板 ====== */
@@ -93,244 +81,101 @@
             margin: auto;
         }
 
-        @keyframes introPanel {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes introPanel { to { opacity: 1; transform: translateY(0); } }
 
-        /* ====== 标题区 ====== */
+        /* ====== 标题与标签 ====== */
         .header { text-align: center; margin-bottom: 35px; }
-        .header h1 {
-            font-size: 2.2rem;
-            color: var(--blue-dark);
-            letter-spacing: 12px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-indent: 12px;
-        }
-        .header-line {
-            width: 1px;
-            height: 30px;
-            background: var(--gold);
-            margin: 0 auto;
-            position: relative;
-        }
-        .header-line::after {
-            content: '';
-            position: absolute;
-            bottom: -3px; left: -2px;
-            width: 5px; height: 5px;
-            border-radius: 50%;
-            background: var(--red);
-        }
-
-        /* ====== 极简标签页 ====== */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-        .tab-btn {
-            background: none;
-            border: none;
-            font-family: var(--font-main);
-            font-size: 1.1rem;
-            color: #666;
-            cursor: pointer;
-            padding-bottom: 5px;
-            position: relative;
-            transition: 0.4s;
-            font-weight: 300;
-        }
+        .header h1 { font-size: 2.2rem; color: var(--blue-dark); letter-spacing: 12px; font-weight: 600; margin-bottom: 10px; text-indent: 12px; }
+        .header-line { width: 1px; height: 30px; background: var(--gold); margin: 0 auto; position: relative; }
+        .header-line::after { content: ''; position: absolute; bottom: -3px; left: -2px; width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
+        
+        .tabs { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
+        .tab-btn { background: none; border: none; font-family: var(--font-main); font-size: 1.1rem; color: #666; cursor: pointer; padding-bottom: 5px; position: relative; transition: 0.4s; font-weight: 300; }
         .tab-btn.active { color: var(--blue-dark); font-weight: 600; }
-        .tab-btn::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 50%;
-            width: 0; height: 2px;
-            background: var(--gold);
-            transition: 0.4s;
-            transform: translateX(-50%);
-        }
+        .tab-btn::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gold); transition: 0.4s; transform: translateX(-50%); }
         .tab-btn.active::after { width: 100%; }
 
         /* ====== 表单区 ====== */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px 15px;
-            margin-bottom: 35px;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            grid-column: span 2;
-        }
-        .input-group.wide { grid-column: span 3; }
-        .input-group label {
-            font-size: 0.75rem;
-            color: var(--blue);
-            margin-bottom: 8px;
-            letter-spacing: 2px;
-            opacity: 0.8;
-        }
-        input {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(28, 74, 97, 0.3);
-            padding: 5px 0 8px 0;
-            font-family: var(--font-main);
-            font-size: 1.2rem;
-            color: var(--dark);
-            text-align: center;
-            transition: 0.3s;
-            border-radius: 0;
-            -webkit-appearance: none; /* 移除手机端默认样式 */
-        }
-        input:focus {
-            outline: none;
-            border-bottom: 1px solid var(--green);
-            background: linear-gradient(to top, rgba(43, 122, 90, 0.08), transparent);
-        }
+        .form-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px 15px; margin-bottom: 35px; }
+        .input-group { display: flex; flex-direction: column; grid-column: span 2; }
+        .input-group label { font-size: 0.75rem; color: var(--blue); margin-bottom: 8px; letter-spacing: 2px; opacity: 0.8; }
+        
+        input { background: transparent; border: none; border-bottom: 1px solid rgba(28, 74, 97, 0.3); padding: 5px 0 8px 0; font-family: var(--font-main); font-size: 1.2rem; color: var(--dark); text-align: center; transition: 0.3s; border-radius: 0; -webkit-appearance: none; }
+        input:focus { outline: none; border-bottom: 1px solid var(--green); background: linear-gradient(to top, rgba(43, 122, 90, 0.08), transparent); }
 
-        .checkbox-group {
-            grid-column: span 6;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: var(--dark);
-            opacity: 0.8;
-        }
+        /* ====== 性别切换选项 ====== */
+        .gender-toggle { display: flex; gap: 10px; height: 100%; align-items: flex-end; padding-bottom: 2px;}
+        .gender-btn { flex: 1; padding: 6px 0; font-size: 0.9rem; font-family: var(--font-main); background: transparent; border: 1px solid rgba(28, 74, 97, 0.3); color: var(--blue); cursor: pointer; transition: 0.3s; border-radius: 4px; }
+        .gender-btn.active { background: var(--green); color: white; border-color: var(--green); box-shadow: 0 4px 10px rgba(43, 122, 90, 0.2); }
+
+        .checkbox-group { grid-column: span 6; display: none; justify-content: center; align-items: center; gap: 10px; font-size: 0.9rem; opacity: 0.8; }
 
         /* ====== 按钮 ====== */
-        .btn-submit {
-            width: 100%;
-            padding: 15px;
-            background: transparent;
-            color: var(--green);
-            border: 1px solid var(--green);
-            border-radius: 4px;
-            font-family: var(--font-main);
-            font-size: 1.1rem;
-            letter-spacing: 10px;
-            text-indent: 10px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .btn-submit:hover, .btn-submit:active {
-            background: var(--green);
-            color: #fff;
-            box-shadow: 0 10px 20px rgba(43, 122, 90, 0.25);
-            letter-spacing: 15px;
-        }
+        .btn-submit { width: 100%; padding: 15px; background: transparent; color: var(--green); border: 1px solid var(--green); border-radius: 4px; font-family: var(--font-main); font-size: 1.1rem; letter-spacing: 10px; text-indent: 10px; cursor: pointer; transition: all 0.4s ease; }
+        .btn-submit:hover, .btn-submit:active { background: var(--green); color: #fff; box-shadow: 0 10px 20px rgba(43, 122, 90, 0.25); letter-spacing: 15px; }
 
         /* ====== 结果展示区 ====== */
-        .result-box {
-            margin-top: 35px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(201, 160, 99, 0.3);
-            display: none;
-        }
+        .result-box { margin-top: 35px; padding-top: 30px; border-top: 1px solid rgba(201, 160, 99, 0.3); display: none; }
+        .date-info { text-align: center; margin-bottom: 25px; line-height: 1.8; color: var(--blue-dark); font-size: 0.85rem; letter-spacing: 1px; font-weight: 600; }
 
-        .date-info {
-            text-align: center;
-            margin-bottom: 25px;
-            line-height: 1.8;
-            color: var(--blue-dark);
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            opacity: 0.9;
-            font-weight: 600;
-        }
+        /* 八字排盘 */
+        .bazi-layout { display: flex; flex-direction: row-reverse; justify-content: center; gap: 25px; margin-bottom: 30px; }
+        .pillar-card { display: flex; flex-direction: column; align-items: center; }
+        .pillar-title { font-size: 0.75rem; color: var(--blue); margin-bottom: 15px; letter-spacing: 2px; writing-mode: vertical-rl; }
+        .bazi-text { writing-mode: vertical-rl; text-orientation: upright; font-size: 2.2rem; font-weight: 400; color: var(--dark); letter-spacing: 10px; margin-bottom: 20px; }
+        .seal { border: 1px solid var(--red); color: var(--red); font-size: 0.7rem; padding: 5px 3px; writing-mode: vertical-rl; text-orientation: upright; border-radius: 2px; margin-top: 8px; opacity: 0.85; }
+        .seal-nayin { border-color: var(--blue); color: var(--blue); }
 
-        .bazi-layout {
+        /* ====== 本命六十四卦区 ====== */
+        .gua-section {
             display: flex;
-            flex-direction: row-reverse;
-            justify-content: center;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(201, 160, 99, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            align-items: center;
             gap: 25px;
         }
-
-        .pillar-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .gua-svg-box { width: 65px; flex-shrink: 0; }
+        /* 爻线的 SVG 动画 */
+        .yao-line {
+            stroke: var(--blue-dark);
+            stroke-width: 7;
+            stroke-linecap: round;
+            transform-origin: center;
+            opacity: 0;
+        }
+        .yao-animate { animation: drawYao 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes drawYao {
+            from { opacity: 0; transform: scaleX(0); }
+            to { opacity: 1; transform: scaleX(1); }
         }
 
-        .pillar-title {
-            font-size: 0.75rem;
-            color: var(--blue);
-            margin-bottom: 15px;
-            letter-spacing: 2px;
-            writing-mode: vertical-rl;
-        }
+        .gua-text-box { flex: 1; }
+        .gua-badge { display: inline-block; background: var(--gold); color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; margin-bottom: 8px; letter-spacing: 2px;}
+        .gua-name { font-size: 1.4rem; color: var(--blue-dark); font-weight: 600; margin-bottom: 8px; letter-spacing: 3px; }
+        .gua-desc { font-size: 0.9rem; color: var(--dark); line-height: 1.6; opacity: 0.85; }
 
-        .bazi-text {
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            font-size: 2.2rem;
-            font-weight: 400;
-            color: var(--dark);
-            letter-spacing: 10px;
-            margin-bottom: 20px;
-        }
+        @keyframes fadeInResult { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .seal {
-            border: 1px solid var(--red);
-            color: var(--red);
-            font-size: 0.7rem;
-            padding: 5px 3px;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            border-radius: 2px;
-            margin-top: 8px;
-            opacity: 0.85;
-        }
-        .seal-nayin {
-            border-color: var(--blue);
-            color: var(--blue);
-        }
-
-        @keyframes fadeInResult {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ========================================= */
-        /* ======= 手机端深度适配 (Media Queries) ======= */
-        /* ========================================= */
+        /* 手机端深度适配 */
         @media (max-width: 600px) {
-            .glass-panel { 
-                padding: 30px 20px; 
-                width: 92%; 
-                margin: 0 auto;
-            }
+            .glass-panel { padding: 30px 20px; width: 92%; margin: 0 auto; }
             .header h1 { font-size: 1.8rem; letter-spacing: 8px; text-indent: 8px;}
-            
-            /* 手机端输入框重排：每行放两个，时间/分钟各占一行一半 */
             .form-grid { gap: 15px 10px; }
-            .input-group { grid-column: span 3; } /* 一行两个 */
-            .input-group.wide { grid-column: span 3; }
-            
-            /* 八字排版在手机上稍微缩小，以防折行 */
+            .input-group { grid-column: span 3; } 
             .bazi-layout { gap: 10px; justify-content: space-around; }
             .bazi-text { font-size: 1.6rem; letter-spacing: 6px; }
-            .pillar-title { font-size: 0.7rem; margin-bottom: 10px; }
-            .seal { font-size: 0.65rem; padding: 4px 2px; margin-top: 5px; }
+            .gua-section { flex-direction: column; text-align: center; padding: 15px;}
         }
     </style>
 </head>
 <body>
-
     <div class="bg-image"></div>
 
     <div class="glass-panel">
         <div class="header">
-            <h1>八字推演</h1>
+            <h1>八字与本命卦</h1>
             <div class="header-line"></div>
         </div>
 
@@ -352,13 +197,21 @@
                 <label>日 (DD)</label>
                 <input type="number" id="in-day" pattern="[0-9]*" inputmode="numeric">
             </div>
-            <div class="input-group wide">
+            <div class="input-group">
                 <label>时辰 (0-23)</label>
                 <input type="number" id="in-hour" pattern="[0-9]*" inputmode="numeric">
             </div>
-            <div class="input-group wide">
+            <div class="input-group">
                 <label>分钟 (0-59)</label>
                 <input type="number" id="in-minute" pattern="[0-9]*" inputmode="numeric">
+            </div>
+            <!-- 新增性别选项 -->
+            <div class="input-group">
+                <label>性别</label>
+                <div class="gender-toggle">
+                    <button class="gender-btn active" id="btn-male" onclick="setGender(1)">乾(男)</button>
+                    <button class="gender-btn" id="btn-female" onclick="setGender(0)">坤(女)</button>
+                </div>
             </div>
             
             <div class="checkbox-group" id="lunar-options">
@@ -367,7 +220,7 @@
             </div>
         </div>
 
-        <button class="btn-submit" onclick="calculateBazi()">推 演</button>
+        <button class="btn-submit" onclick="calculateBazi()">演 算 乾 坤</button>
 
         <div class="result-box" id="result-box">
             <div class="date-info" id="date-display"></div>
@@ -398,21 +251,32 @@
                     <div class="seal seal-nayin" id="y-nayin"></div>
                 </div>
             </div>
+
+            <!-- 新增：六十四卦展示区 -->
+            <div class="gua-section" id="gua-section" style="display: none;">
+                <div class="gua-svg-box" id="gua-svg-box">
+                    <!-- SVG 将通过 JS 动态注入 -->
+                </div>
+                <div class="gua-text-box">
+                    <div class="gua-badge">梅花易数 · 本命卦</div>
+                    <div class="gua-name" id="gua-name"></div>
+                    <div class="gua-desc" id="gua-desc"></div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- 易经核心逻辑与 64 卦数据库 -->
     <script>
-        // PWA Service Worker 注册代码
+        // PWA 注册
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('PWA Service Worker 注册成功!'))
-                    .catch(err => console.log('Service Worker 注册失败:', err));
-            });
+            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
         }
 
         let currentMode = 'solar';
+        let currentGender = 1; // 1男 0女
 
+        // 页面加载预填
         window.onload = () => {
             const now = new Date();
             document.getElementById('in-year').value = now.getFullYear();
@@ -427,9 +291,98 @@
             document.getElementById('tab-solar').classList.remove('active');
             document.getElementById('tab-lunar').classList.remove('active');
             document.getElementById('tab-' + mode).classList.add('active');
-            
             document.getElementById('lunar-options').style.display = (mode === 'lunar') ? 'flex' : 'none';
         }
+
+        function setGender(val) {
+            currentGender = val;
+            document.getElementById('btn-male').classList.remove('active');
+            document.getElementById('btn-female').classList.remove('active');
+            if(val === 1) document.getElementById('btn-male').classList.add('active');
+            else document.getElementById('btn-female').classList.add('active');
+        }
+
+        // ====== 易经六十四卦高精度数据库 (上卦-下卦) ======
+        // 八卦序号: 1乾(天) 2兑(泽) 3离(火) 4震(雷) 5巽(风) 6坎(水) 7艮(山) 8坤(地)
+        // 爻象数组 (由下至上 0为阴 1为阳)
+        const trigramYao = {
+            1: [1,1,1], 2:[1,1,0], 3: [1,0,1], 4:[1,0,0], 
+            5: [0,1,1], 6: [0,1,0], 7: [0,0,1], 8: [0,0,0]
+        };
+
+        const hexagramData = {
+            "1-1": { n: "乾为天", d: "大吉。六爻皆阳，刚健中正。特质：天生领袖，刚毅果断，自强不息，极具开创力。" },
+            "1-2": { n: "天泽履", d: "吉。如履薄冰，外刚内悦。特质：知书达理，讲究分寸，行事谨慎而能得人欢心。" },
+            "1-3": { n: "天火同人", d: "大吉。上下和同，光明磊落。特质：极佳的人缘与团队精神，热情开朗，善于交际。" },
+            "1-4": { n: "天雷无妄", d: "平。顺乎自然，不抱非分之想。特质：率直纯真，不矫揉造作，能守正道。" },
+            "1-5": { n: "天风姤", d: "中。风遇天下，柔遇刚。特质：心思敏捷，社交能力强，容易在人群中脱颖而出。" },
+            "1-6": { n: "天水讼", d: "凶。内险外刚，易起争端。特质：口才佳，好辩论，具有极强的法律与维权意识。" },
+            "1-7": { n: "天山遁", d: "中。退避隐退，藏锋守拙。特质：内心清高，向往自由，懂得进退之道，不慕虚荣。" },
+            "1-8": { n: "天地否", d: "凶。天地不交，闭塞不通。特质：性格内向沉稳，习惯自我保护，需警惕固执己见。" },
+            
+            "2-1": { n: "泽天夬", d: "中。刚决柔，果断决绝。特质：雷厉风行，决断力极强，敢于突破常规。" },
+            "2-2": { n: "兑为泽", d: "吉。喜悦沟通，内外皆悦。特质：极其讨喜，幽默风趣，是绝佳的沟通者和演说家。" },
+            "2-3": { n: "泽火革", d: "吉。顺天应人，变革创新。特质：求新求变，具有改革精神和破旧立新的勇气。" },
+            "2-4": { n: "泽雷随", d: "吉。顺应时势，从善如流。特质：适应力极强，平易近人，懂得顺水推舟。" },
+            "2-5": { n: "泽风大过", d: "中。栋桡之危，才华超群。特质：能力拔尖，常担重任，但行事容易特立独行。" },
+            "2-6": { n: "泽水困", d: "凶。身处困境，坚守底线。特质：抗压能力强，大器晚成，在逆境中方显英雄本色。" },
+            "2-7": { n: "泽山咸", d: "大吉。心有灵犀，互相感应。特质：极具共情力，感情丰富，直觉准确，人缘极好。" },
+            "2-8": { n: "泽地萃", d: "大吉。精英荟萃，繁荣聚集。特质：具有磁性魅力，能够吸引人才与财富，组织力强。" },
+
+            "3-1": { n: "火天大有", d: "大吉。如日中天，顺天依时。特质：福气深厚，胸襟开阔，生来具有极高的成就潜力。" },
+            "3-2": { n: "火泽睽", d: "中。求同存异，背道而驰。特质：眼光独特，看问题视角新颖，适合做独立创作者。" },
+            "3-3": { n: "离为火", d: "中。光明华丽，依附而盛。特质：热情似火，才华横溢，追求美感与艺术境界。" },
+            "3-4": { n: "火雷噬嗑", d: "中。刚柔相济，刑罚明察。特质：黑白分明，嫉恶如仇，具有极强的执行力和正义感。" },
+            "3-5": { n: "火风鼎", d: "大吉。革故鼎新，稳重安祥。特质：格局宏大，稳重可靠，能成为行业的定海神针。" },
+            "3-6": { n: "火水未济", d: "平。充满未知，无限可能。特质：永远保持好奇心，不甘平庸，一生都在探索与追求。" },
+            "3-7": { n: "火山旅", d: "平。行商客居，漂泊不定。特质：热爱自由与旅行，见识广博，适应多变的环境。" },
+            "3-8": { n: "火地晋", d: "吉。旭日东升，晋升明鉴。特质：充满朝气，积极进取，事业心强，步步高升。" },
+
+            "4-1": { n: "雷天大壮", d: "中。阳气隆盛，刚健有力。特质：精力充沛，气场强大，行事果敢但不宜过于冲动。" },
+            "4-2": { n: "雷泽归妹", d: "凶。违背常理，感情用事。特质：重情重义，容易被感情左右，行事需多几分理智。" },
+            "4-3": { n: "雷火丰", d: "吉。日中则昃，丰盛至极。特质：才华爆棚，容易在短时间内取得巨大成就，光芒万丈。" },
+            "4-4": { n: "震为雷", d: "中。雷声震恐，从容不迫。特质：行动派，敢闯敢拼，临危不惧，内心十分强大。" },
+            "4-5": { n: "雷风恒", d: "吉。长久安稳，持之以恒。特质：极具恒心与毅力，忠诚可靠，是难得的长期伴侣或合伙人。" },
+            "4-6": { n: "雷水解", d: "吉。冰雪消融，化险为夷。特质：善于解决问题，心胸豁达，能轻松化解危机与矛盾。" },
+            "4-7": { n: "雷山小过", d: "中。阴暗过渡，不可大事。特质：心思细腻，注重细节，适合做精密细致的技术工作。" },
+            "4-8": { n: "雷地豫", d: "吉。顺时依势，欢乐和乐。特质：天性乐观，懂得享受生活，拥有极佳的艺术细胞。" },
+
+            "5-1": { n: "风天小畜", d: "中。积蓄力量，密云不雨。特质：性格温和，善于储蓄与积累，稳扎稳打，厚积薄发。" },
+            "5-2": { n: "风泽中孚", d: "吉。诚实守信，感化人心。特质：真诚纯粹，极具亲和力，能够用真心打动所有人。" },
+            "5-3": { n: "风火家人", d: "吉。男主外女主内，和睦相处。特质：极具家庭观念，温馨体贴，善于营造归属感。" },
+            "5-4": { n: "风雷益", d: "大吉。损上益下，大有作为。特质：乐于助人，具有极高的社会责任感，贵人运极佳。" },
+            "5-5": { n: "巽为风", d: "中。柔顺谦逊，无孔不入。特质：八面玲珑，灵活变通，洞察力强，能够适应任何圈子。" },
+            "5-6": { n: "风水涣", d: "中。乘风破浪，离散冰释。特质：思想前卫，不拘一格，善于打破僵局和传统束缚。" },
+            "5-7": { n: "风山渐", d: "吉。循序渐进，缓慢发展。特质：做事极有条理，不急不躁，大器晚成，步步为营。" },
+            "5-8": { n: "风地观", d: "中。仰视高看，体察万物。特质：洞察力惊人，思维深邃，具有哲学家的上帝视角。" },
+
+            "6-1": { n: "水天需", d: "中。耐心等待，时机成熟。特质：极具耐心，性格沉稳，懂得在蛰伏中等待最佳时机。" },
+            "6-2": { n: "水泽节", d: "吉。适可而止，节制有度。特质：自律性极强，作息规律，极具原则性和底线。" },
+            "6-3": { n: "水火既济", d: "吉。阴阳和谐，功成名就。特质：各方面均衡发展，性格圆融，容易获得世俗意义的成功。" },
+            "6-4": { n: "水雷屯", d: "凶。万物始生，艰难险阻。特质：草创精神，虽命运多舛但韧性极强，具备创业者基因。" },
+            "6-5": { n: "水风井", d: "吉。源源不断，滋养万物。特质：乐于奉献，内心世界丰富，像一口深井般充满智慧。" },
+            "6-6": { n: "坎为水", d: "凶。重重险阻，随波逐流。特质：极度聪明，城府较深，能在最复杂的环境中生存。" },
+            "6-7": { n: "水山蹇", d: "凶。前途艰险，知难而退。特质：性格谨慎防备心重，做事求稳，善于规避人生风险。" },
+            "6-8": { n: "水地比", d: "吉。水地交融，互相依附。特质：极具合作精神，平易近人，是团队中最好的协调者。" },
+
+            "7-1": { n: "山天大畜", d: "吉。大量积蓄，底蕴深厚。特质：博学多才，内存丰富，有海纳百川的胸怀与实力。" },
+            "7-2": { n: "山泽损", d: "中。损下益上，吃亏是福。特质：具有牺牲精神，愿意成全他人，最终必得善报。" },
+            "7-3": { n: "山火贲", d: "中。注重仪容，文采斐然。特质：品位极高，极具审美与艺术修养，注重生活仪式感。" },
+            "7-4": { n: "山雷颐", d: "吉。修身养性，言语谨慎。特质：注重健康与养生，言辞得体，行事稳重端庄。" },
+            "7-5": { n: "山风蛊", d: "中。除旧布新，挽救危机。特质：天生的改革家与医生，善于发现系统漏洞并加以修复。" },
+            "7-6": { n: "山水蒙", d: "平。启蒙阶段，需要引导。特质：保持童心，求知欲强，遇良师益友则能大放异彩。" },
+            "7-7": { n: "艮为山", d: "平。静止不动，安分守己。特质：极为可靠，沉稳如山，定力强，外界难以动摇其心智。" },
+            "7-8": { n: "山地剥", d: "凶。阴盛阳衰，剥落退败。特质：危机意识极强，擅长在低谷中隐忍生存，等待复苏。" },
+
+            "8-1": { n: "地天泰", d: "大吉。天地交泰，阴阳和谐。特质：一生顺遂安泰，心态平和，自带祥瑞之气，极佳的命格。" },
+            "8-2": { n: "地泽临", d: "吉。居高临下，亲自督导。特质：具有强烈的责任感与领导风范，亲力亲为，令人信服。" },
+            "8-3": { n: "地火明夷", d: "凶。光明受挫，内明外暗。特质：大智若愚，善于隐藏自己的锋芒，在黑暗中守护初心。" },
+            "8-4": { n: "地雷复", d: "吉。剥极必复，生机重现。特质：复原力极强，跌倒了总能迅速爬起，充满无尽的生命力。" },
+            "8-5": { n: "地风升", d: "吉。柔顺上进，步步高升。特质：进取心强，懂得借力打力，能够在职场或人生中稳步攀升。" },
+            "8-6": { n: "地水师", d: "中。聚集众人，兴师动众。特质：具有统帅之才，善于排兵布阵，适合做指挥官或高管。" },
+            "8-7": { n: "地山谦", d: "大吉。谦受益，满招损。特质：最高级的人格，实力极其强大却又极其低调谦逊，人皆敬仰。" },
+            "8-8": { n: "坤为地", d: "大吉。厚德载物，柔顺和顺。特质：极具包容心，稳重踏实，极佳的支持者，母性光辉十足。" }
+        };
 
         function calculateBazi() {
             const y = parseInt(document.getElementById('in-year').value);
@@ -439,13 +392,9 @@
             const min = parseInt(document.getElementById('in-minute').value);
             const isLeap = document.getElementById('is-leap').checked;
 
-            if (!y || !m || !d) {
-                alert("需将年月日填写完整方可推演！");
-                return;
-            }
+            if (!y || !m || !d) { alert("天地密码未全，请填入完整年月日！"); return; }
 
             let solarDate, lunarDate;
-
             try {
                 if (currentMode === 'solar') {
                     solarDate = Solar.fromYmdHms(y, m, d, h || 0, min || 0, 0);
@@ -456,15 +405,18 @@
                     solarDate = lunarDate.getSolar();
                 }
             } catch (error) {
-                alert("星象有误（日期输入不合法），请重新核对。\n" + error.message);
-                return;
+                alert("星象有误，请核对输入格式。\n" + error.message); return;
             }
 
             const baZi = lunarDate.getEightChar();
-            
+            // 这里将性别传给八字引擎 (男1 女0)，虽不改变四柱，但若后续开发大运时会非常准确。
+            baZi.setSect(currentGender); 
+
+            // ===== 1. 渲染八字区 =====
+            const genderStr = currentGender === 1 ? '乾造 (男)' : '坤造 (女)';
             document.getElementById('date-display').innerHTML = `
-                公历：${solarDate.toYmdHms()} <br>
-                农历：${lunarDate.toString()}
+                命主：${genderStr} <br>
+                公历：${solarDate.toYmdHms()} &nbsp;|&nbsp; 农历：${lunarDate.toString()}
             `;
 
             document.getElementById('y-ganzhi').innerText = baZi.getYearGan() + baZi.getYearZhi();
@@ -482,12 +434,71 @@
             document.getElementById('d-nayin').innerText = baZi.getDayNaYin();
             document.getElementById('t-nayin').innerText = baZi.getTimeNaYin();
 
+            // ===== 2. 核心：推演梅花易数本命卦 =====
+            // 取数规则：年支序(子1~亥12) + 月(1-12) + 日(1-30) + 时支序(子1~亥12)
+            const yearZhiNum = lunarDate.getYearZhiIndex() + 1;
+            const monthNum = Math.abs(lunarDate.getMonth());
+            const dayNum = lunarDate.getDay();
+            const hourZhiNum = lunarDate.getTimeZhiIndex() + 1;
+
+            let upperTrigram = (yearZhiNum + monthNum + dayNum) % 8;
+            if (upperTrigram === 0) upperTrigram = 8;
+
+            let lowerTrigram = (yearZhiNum + monthNum + dayNum + hourZhiNum) % 8;
+            if (lowerTrigram === 0) lowerTrigram = 8;
+
+            const hexKey = `${upperTrigram}-${lowerTrigram}`;
+            const hexInfo = hexagramData[hexKey];
+
+            document.getElementById('gua-name').innerText = hexInfo.n;
+            document.getElementById('gua-desc').innerText = hexInfo.d;
+
+            // 绘制动态卦象 SVG
+            drawHexagram(upperTrigram, lowerTrigram);
+
+            // ===== 3. 显现动画 =====
             const resultBox = document.getElementById('result-box');
+            document.getElementById('gua-section').style.display = 'flex';
             resultBox.style.display = 'block';
-            
             resultBox.style.animation = 'none';
             resultBox.offsetHeight; 
             resultBox.style.animation = 'fadeInResult 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards'; 
+        }
+
+        // ====== 绘制动态六爻 SVG ======
+        function drawHexagram(upper, lower) {
+            const upYao = trigramYao[upper];
+            const lowYao = trigramYao[lower];
+            // 组合成六爻：从下到上 (0-5)
+            const sixYao = [...lowYao, ...upYao]; 
+            
+            let svgHtml = `<svg viewBox="0 0 100 130" width="100%" height="100%">`;
+            
+            // 从上往下绘制 (Y坐标递增) -> 对应六爻数组的从上到下 (5 到 0)
+            const yPositions =[15, 35, 55, 80, 100, 120]; // 留出上下卦的间隙 (55 和 80 之间空隙稍大)
+            
+            for(let i=5; i>=0; i--) {
+                const isYang = sixYao[i] === 1;
+                const yPos = yPositions[5-i];
+                const animDelay = (i * 0.15); // 从下往上依次展现 (初爻 i=0 延迟最短 0s)
+                
+                if (isYang) {
+                    // 阳爻：一条长线
+                    svgHtml += `<line x1="5" y1="${yPos}" x2="95" y2="${yPos}" class="yao-line yao-animate" style="animation-delay: ${animDelay}s;" />`;
+                } else {
+                    // 阴爻：两断线
+                    svgHtml += `<line x1="5" y1="${yPos}" x2="42" y2="${yPos}" class="yao-line yao-animate" style="animation-delay: ${animDelay}s;" />`;
+                    svgHtml += `<line x1="58" y1="${yPos}" x2="95" y2="${yPos}" class="yao-line yao-animate" style="animation-delay: ${animDelay}s;" />`;
+                }
+            }
+            svgHtml += `</svg>`;
+            
+            const box = document.getElementById('gua-svg-box');
+            box.innerHTML = svgHtml;
+            // 重新触发 SVG 动画
+            box.style.display = 'none';
+            box.offsetHeight;
+            box.style.display = 'block';
         }
     </script>
 </body>
