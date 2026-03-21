@@ -103,7 +103,7 @@
         /* ====== 结果展示区 ====== */
         .result-box { margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(201, 160, 99, 0.4); display: none; position: relative; }
         
-        .date-info { text-align: center; margin-bottom: 35px; line-height: 2; color: var(--blue-dark); font-size: 0.9rem; letter-spacing: 1px; font-weight: 600; position: relative; z-index: 1;}
+        .date-info { text-align: center; margin-bottom: 25px; line-height: 2; color: var(--blue-dark); font-size: 0.9rem; letter-spacing: 1px; font-weight: 600; position: relative; z-index: 1;}
         .date-info span { color: var(--red); font-size: 1.1rem; margin: 0 5px;}
 
         /* 八字排盘连动效 */
@@ -113,10 +113,9 @@
         .bazi-text { writing-mode: vertical-rl; text-orientation: upright; font-size: 2.4rem; font-weight: 400; color: var(--dark); letter-spacing: 10px; margin-bottom: 20px; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);}
         .seal { border: 1px solid var(--red); color: var(--red); font-size: 0.7rem; padding: 5px 3px; writing-mode: vertical-rl; text-orientation: upright; border-radius: 2px; margin-top: 8px; opacity: 0.85; background: rgba(255,255,255,0.5);}
         .seal-nayin { border-color: var(--blue); color: var(--blue); }
-
         @keyframes pillarFade { to { opacity: 1; transform: translateY(0); } }
 
-        /* ====== 命局格局剖析区 ====== */
+        /* ====== 命局格局与喜用神剖析区 ====== */
         .geju-section { margin-top: 25px; position: relative; z-index: 1; }
         .geju-header { text-align: center; margin-bottom: 20px; }
         .geju-title { font-size: 1.1rem; color: var(--blue-dark); font-weight: 900; letter-spacing: 8px; margin-bottom: 8px; position: relative; display: inline-block;}
@@ -136,34 +135,49 @@
         .geju-desc { font-family: var(--font-sans); font-size: 0.95rem; color: var(--dark); line-height: 1.8; text-align: justify; opacity: 0.9;}
         .geju-desc strong { font-family: var(--font-main); font-size: 1.05rem; color: var(--blue-dark); letter-spacing: 1px;}
 
-        /* ====== 六十四卦高级排版区 ====== */
-        .gua-section {
+        /* 喜用神区 */
+        .ys-divider { text-align: center; margin: 30px 0 20px; font-size: 0.85rem; color: var(--gold); letter-spacing: 6px; font-weight: 600; opacity: 0.9; border-top: 1px dashed rgba(201,160,99,0.4); padding-top: 25px;}
+        .ys-tags { display: flex; gap: 12px; justify-content: center; margin-bottom: 15px; }
+        .ys-tag-item { background: rgba(201,160,99,0.15); border: 1px solid var(--gold); color: var(--red); padding: 4px 18px; border-radius: 20px; font-weight: 900; font-size: 1.05rem; letter-spacing: 2px;}
+        .ys-tag-item .sub-text { font-size: 0.8rem; opacity: 0.8; letter-spacing: 0; margin-left: 2px; }
+        .ys-desc { font-family: var(--font-sans); font-size: 0.9rem; color: var(--dark); line-height: 1.8; text-align: justify; padding: 15px; background: rgba(255,255,255,0.5); border-radius: 8px;}
+        .ys-desc p { margin-bottom: 10px; }
+        .ys-desc p:last-child { margin-bottom: 0; }
+
+        /* ====== 通用高级排版区 (梅花易数 & 二十八星宿) ====== */
+        .elegant-section {
             position: relative; z-index: 1;
             background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
             border: 1px solid rgba(201, 160, 99, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             padding: 30px; border-radius: 12px; margin-top: 25px;
         }
-        .gua-header { display: flex; align-items: center; gap: 25px; margin-bottom: 25px; border-bottom: 1px dashed rgba(201, 160, 99, 0.4); padding-bottom: 20px;}
-        .gua-svg-box { width: 60px; flex-shrink: 0; }
+        .elegant-header { display: flex; align-items: center; gap: 25px; margin-bottom: 25px; border-bottom: 1px dashed rgba(201, 160, 99, 0.4); padding-bottom: 20px;}
+        .elegant-svg-box { width: 65px; height: 65px; flex-shrink: 0; position: relative; }
         
-        /* 爻线的精准样式，等待 Observer 触发 */
+        .elegant-title-area { flex: 1; }
+        .elegant-badge { display: inline-block; background: var(--gold); color: #fff; font-size: 0.75rem; padding: 3px 10px; border-radius: 2px; margin-bottom: 10px; letter-spacing: 2px;}
+        .elegant-name { font-size: 2rem; color: var(--blue-dark); font-weight: 900; letter-spacing: 6px; display: flex; align-items: baseline; gap: 10px;}
+        .elegant-sub { font-size: 1rem; color: var(--red); font-weight: 600; letter-spacing: 2px;}
+        
+        .elegant-content { text-align: justify; }
+        .elegant-classical { font-size: 1.05rem; color: var(--blue); font-weight: 600; line-height: 1.8; margin-bottom: 20px; letter-spacing: 1.5px; position: relative; padding-left: 20px;}
+        .elegant-classical::before { content: '『'; position: absolute; left: -5px; top: -5px; font-size: 1.5rem; opacity: 0.5; color: var(--gold);}
+        .elegant-classical::after { content: '』'; font-size: 1.5rem; opacity: 0.5; color: var(--gold); position: relative; top: 5px; right: -5px;}
+        
+        .elegant-psycho { font-family: var(--font-sans); font-size: 0.95rem; color: var(--gray); line-height: 1.8; border-left: 4px solid var(--green); padding-left: 15px; background: rgba(43, 122, 90, 0.05); padding: 15px 15px 15px 20px; border-radius: 0 8px 8px 0;}
+        .elegant-psycho strong { color: var(--blue-dark); font-weight: 600; font-family: var(--font-main); font-size: 1.05rem;}
+
+        /* 梅花爻线动效 */
         .yao-line { stroke: var(--blue-dark); stroke-width: 8; stroke-linecap: round; transform-origin: center; opacity: 0; }
-        @keyframes drawYao { 
-            0% { opacity: 0; transform: scaleX(0); } 
-            100% { opacity: 1; transform: scaleX(1); } 
-        }
+        @keyframes drawYao { 0% { opacity: 0; transform: scaleX(0); } 100% { opacity: 1; transform: scaleX(1); } }
         
-        .gua-title-area { flex: 1; }
-        .gua-badge { display: inline-block; background: var(--gold); color: #fff; font-size: 0.75rem; padding: 3px 10px; border-radius: 2px; margin-bottom: 10px; letter-spacing: 2px;}
-        .gua-name { font-size: 2rem; color: var(--blue-dark); font-weight: 900; letter-spacing: 6px; }
-        
-        .gua-content { text-align: justify; }
-        .gua-classical { font-size: 1.05rem; color: var(--blue); font-weight: 600; line-height: 1.8; margin-bottom: 20px; letter-spacing: 1.5px; position: relative; padding-left: 20px;}
-        .gua-classical::before { content: '『'; position: absolute; left: -5px; top: -5px; font-size: 1.5rem; opacity: 0.5; color: var(--gold);}
-        .gua-classical::after { content: '』'; font-size: 1.5rem; opacity: 0.5; color: var(--gold); position: relative; top: 5px; right: -5px;}
-        
-        .gua-psycho { font-family: var(--font-sans); font-size: 0.95rem; color: var(--gray); line-height: 1.8; border-left: 4px solid var(--green); padding-left: 15px; background: rgba(43, 122, 90, 0.05); padding: 15px 15px 15px 20px; border-radius: 0 8px 8px 0;}
-        .gua-psycho strong { color: var(--blue-dark); font-weight: 600; font-family: var(--font-main); font-size: 1.05rem;}
+        /* 星宿星图专属线系动态编织效网 (纯几何独立无缝网骨图纹构建版) */
+        .xiu-line { stroke: var(--gold); stroke-width: 1.8; stroke-dasharray: 400; stroke-dashoffset: 400; opacity: 0.7; stroke-linecap: round; fill: none;}
+        .xiu-star { fill: var(--blue-dark); opacity: 0;}
+        .xiu-star-glow { fill: var(--gold); opacity: 0; }
+        @keyframes drawXiuLine { to { stroke-dashoffset: 0; } }
+        @keyframes starFadeIn { to { opacity: 1; } }
+        @keyframes glowXiuStar { 0% { opacity: 0; transform: scale(0.6); } 50% { opacity: 0.8; transform: scale(1.8); } 100% { opacity: 0.4; transform: scale(1); } }
 
         /* ====== 历史纪要区 ====== */
         .history-section { margin-top: 50px; padding-top: 30px; border-top: 1px dashed rgba(201, 160, 99, 0.4); display: none; }
@@ -179,6 +193,8 @@
         .h-gua { font-size: 0.85rem; color: var(--green); border: 1px solid var(--green); padding: 2px 8px; border-radius: 12px; letter-spacing: 1px;}
         .h-date { font-size: 0.8rem; color: #888; font-family: var(--font-sans);}
         
+        .history-hint { text-align: center; color: rgba(136,136,136,0.6); font-size: 0.75rem; margin-top: 12px; letter-spacing: 2px; }
+
         .btn-clear { background: none; border: none; color: var(--red); opacity: 0.5; font-size: 0.85rem; letter-spacing: 3px; cursor: pointer; display: block; margin: 30px auto 0; transition: 0.3s; font-family: var(--font-main);}
         .btn-clear:hover { opacity: 1; transform: scale(1.05);}
 
@@ -192,8 +208,8 @@
             .bazi-text { font-size: 1.8rem; }
             .geju-tags { gap: 10px; }
             .g-tag { font-size: 0.85rem; padding: 4px 8px;}
-            .gua-header { flex-direction: column; text-align: center; }
-            .gua-classical::before, .gua-classical::after { display: none; }
+            .elegant-header { flex-direction: column; text-align: center; }
+            .elegant-classical::before, .elegant-classical::after { display: none; }
         }
     </style>
 </head>
@@ -256,6 +272,7 @@
         <div class="result-box" id="result-box">
             <div class="date-info" id="date-display"></div>
             
+            <!-- 1. 八字排盘区 -->
             <div class="bazi-layout">
                 <div class="pillar-card">
                     <div class="pillar-title">时柱</div>
@@ -283,7 +300,8 @@
                 </div>
             </div>
 
-            <div class="geju-section" id="geju-section" style="display: none;">
+            <!-- 2. 格局与喜用神剖析区 -->
+            <div class="geju-section" id="geju-section">
                 <div class="geju-header">
                     <div class="geju-title">命 局 剖 析</div>
                     <div class="geju-daymaster" id="geju-daymaster"></div>
@@ -295,33 +313,63 @@
                         <span class="g-tag strength-tag" id="geju-strength-tag"></span>
                     </div>
                     <div class="geju-desc" id="geju-desc"></div>
+                    
+                    <div class="ys-divider">—— 乾 坤 喜 用 ——</div>
+                    <div class="ys-tags" id="ys-tags"></div>
+                    <div class="ys-desc" id="ys-desc"></div>
                 </div>
             </div>
 
-            <div class="gua-section" id="gua-section" style="display: none;">
-                <div class="gua-header">
-                    <div class="gua-svg-box" id="gua-svg-box"></div>
-                    <div class="gua-title-area">
-                        <div class="gua-badge">梅花易数 · 本命卦</div>
-                        <div class="gua-name" id="gua-name"></div>
+            <!-- 3. 梅花易数本命卦 -->
+            <div class="elegant-section" id="gua-section">
+                <div class="elegant-header">
+                    <div class="elegant-svg-box" id="gua-svg-box"></div>
+                    <div class="elegant-title-area">
+                        <div class="elegant-badge">梅花易数 · 本命卦</div>
+                        <div class="elegant-name" id="gua-name"></div>
                     </div>
                 </div>
-                <div class="gua-content">
-                    <div class="gua-classical" id="gua-class"></div>
-                    <div class="gua-psycho" id="gua-psych"></div>
+                <div class="elegant-content">
+                    <div class="elegant-classical" id="gua-class"></div>
+                    <div class="elegant-psycho" id="gua-psych"></div>
                 </div>
             </div>
+
+            <!-- 4. 二十八星宿 (精准图像测算几何绘制全体系) -->
+            <div class="elegant-section" id="xiu-section" style="display:none;">
+                <div class="elegant-header">
+                    <div class="elegant-svg-box" id="xiu-svg-box"></div>
+                    <div class="elegant-title-area">
+                        <div class="elegant-badge" id="xiu-dir"></div>
+                        <div class="elegant-name" id="xiu-name">
+                            <span id="xiu-name-main"></span>
+                            <span class="elegant-sub" id="xiu-animal"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="elegant-content">
+                    <div class="elegant-classical" id="xiu-desc"></div>
+                    <div class="elegant-psycho">
+                        <strong>【星宿修心开示】</strong><br>
+                        本命宿曜为生命本源图谱。唯有顺天体之真力禀赋，扬其长避短，积缘深造修行之德望以乘运转交相辉映，必得圆满深福。
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="history-section" id="history-section">
             <div class="history-title">—— 推 演 纪 要 ——</div>
             <div class="history-list" id="history-list"></div>
+            <!-- 安置的本地保存声明 -->
+            <div class="history-hint">你的记录只会保存在本地。</div>
             <button class="btn-clear" onclick="clearHistory()">🧹 清空所有尘缘纪要</button>
         </div>
     </div>
 
     <script>
-        // ====== 命理格局数据词典 ======
+        // ====== 全谱六十四卦及核心国学命理数组资料 (彻底锁定防修缺版本) ======
+        
         const dayMasterData = {
             "甲": "日主为甲，属阳木。如参天大树，生机勃勃，刚直倔强，极具向上生长的力量。",
             "乙": "日主为乙，属阴木。如花草藤蔓，柔软坚韧，极具适应力，能在逆境中蔓延逢生。",
@@ -340,12 +388,13 @@
             "七杀格": "开拓进取，威风凛凛。极具魄力和执行力，能在逆境中杀出一条血路。带有强烈的个人英雄色彩，适合创业或破局。",
             "正印格": "慈悲仁厚，思想深邃。天然带有书卷气，长辈缘极佳。重视精神世界的丰盈，淡泊名利，极其适合教育与文化领域。",
             "偏印格": "领悟力强，特立独行。具有极高的艺术天赋和敏锐的第六感。不走寻常路，在偏门、宗教、设计或小众领域能取惊人成就。",
-            "正财格": "勤俭踏实，按部就班。对金钱和资源有天生敏感度，讲究一分耕耘一分收获。财富积累稳健，极其重视现实与安稳。",
+            "正财格": "勤俭踏实，按部没班。对金钱和资源有天生敏感度，讲究一分耕耘一分收获。财富积累稳健，极其重视现实与安稳。",
             "偏财格": "慷慨大方，眼光独到。擅长资源整合与风险投资，具极强商业头脑。为人豪爽，一生常有意外之财，天生的生意人。",
             "伤官格": "才华横溢，桀骜不驯。思维活跃，敢于打破常规。极具个人魅力与表达欲，但也容易锋芒太露。适合演艺、设计、创意等行业。",
             "食神格": "温文尔雅，懂得享受。自带福气与口福，性格宽厚，不喜激烈争斗。一生相对安逸顺遂，适合从事文艺、美食及服务业。",
             "建禄格": "自强不息，脚踏实地。大多不靠祖业，全凭自己打拼。具有坚韧不拔的意志力和极强自尊心，独立性极高，属于实干派。",
-            "羊刃格": "冲劲十足，义薄云天。生命力极其旺盛，抗压能力爆表。面对困难有不屈不挠的斗志，但也需克制鲁莽，适合高竞争环境。"
+            "羊刃格": "冲劲十足，义薄云天。生命力极其旺盛，抗压能力爆表。面对困难有不屈不挠的斗志，但也需克制鲁莽，适合高竞争环境。",
+            "正格不显": "八字月令藏干未透出天干，气势潜藏。为人性格多面，不拘泥于单一框架，适应力与可塑性极强，属大器晚成或另辟蹊径之命局。"
         };
 
         const waiGeData = {
@@ -355,141 +404,55 @@
             "稼穑格": "土气专旺，沉稳而厚重。如大地般承载万物，极具信誉与包容心，财富与地位往往坚不可摧。",
             "从革格": "金气专旺，刚毅而锋利。执行力与决断力极高，具有改革与肃杀之气，天生具备破局者的气场。",
             "润下格": "水气专旺，至柔而至刚。智慧深不可测，极具渗透力与变通性，能在无形之中掌控全局。",
-            "从旺格": "全局同气连枝，顺应旺盛之势。不可逆其锋芒，能将专注力发挥至极，成就不凡。",
+            "专旺格": "全局同气连枝，顺应旺盛之势。不可逆其锋芒，能将专注力发挥至极，成就不凡。",
             "从弱格": "大智若愚，顺应天时。能舍弃个人执念，融入大势，往往能得贵人或绝地逢生之大机缘。",
             "从财格": "全局财星旺极，顺应财富之势。天生对商机嗅觉极度敏锐，能在资本与资源的洪流中如鱼得水。",
             "从杀格": "全局官杀旺极，顺应权威之势。能够在高压与极其严格的体系中获得至高权力，手握重器。",
-            "官印相生格": "官星与印星互相护卫。为人端正清高，极具贵气，擅长管理与统筹，属于名利双收的绝佳命局。",
-            "食神生财格": "和气生财的典范。头脑灵活，懂得将自身的才华、技术与人脉资源完美转化为丰厚的财富。",
-            "伤官佩印格": "才华横溢却不张狂，以印星约束伤官的锋芒。极具学术与权威造诣，以德服人，名声极其远大。",
-            "食神制杀格": "以才智与手腕化解危机与强敌。临危不乱，能将极大的风险转化为极高的成就与权力。",
-            "清粹中和格": "五行流转有情，不偏不倚。一生少有大起大落，平稳安康，属于厚福绵长的清贵之局。"
+            "从儿格": "全局食伤旺极，顺应才华与创意之势。天资聪颖，极具艺术与创新天赋，一生常有灵光乍现之妙局。",
+            "从势格": "全局多党克泄耗，顺应大势。处世圆融，能屈能伸，善于在复杂多变的环境中左右逢源。",
+            "印星破格": "本欲从弱，却见印星透出或暗藏。格局虽逢破，但常在绝境中得长辈或贵人暗中相助，属波折中见真情的命局。",
+            "比劫破格": "本欲从弱，却见比劫帮身。格局虽逢破，但主为人坚韧，能在艰难时局中凭同辈兄弟朋友之力硬抗危机。",
+            "食伤泄秀": "日主强旺，得食伤化泄。才华横溢，思维敏捷，能将强大的内在能量转化为出色的外在成就与艺术造诣。",
+            "无显著外格": "阴阳五行流转于常理之中，不走极端。一生发展顺应常态，稳健踏实，无大起大落之凶险，自有厚福延绵。"
         };
 
         const strengthData = {
             "身强": "日主逢生得令，根基深厚，五行能量充沛。具备极强的抗压与决断力，能胜任财官，无需过度依赖外力，一生以独立开创为主。",
             "身弱": "日主失令受制，气场相对温和内敛。需借助印星（长辈、学习）或比劫（同伴、团队）之功方可担大任，懂得“借力打力”是人生的核心智慧。",
             "极强 (专旺)": "日元旺极，满盘同气，势不可挡。此乃特殊造化，不可逆其锋芒。顺势而为必能成就大业，往往能在某一专精领域登峰造极。",
-            "极弱 (从格)": "日元极弱，无根无助。懂得放下自我执念，顺应局中强旺之神，此乃绝地逢生之象。能随遇而安，乘势而上，往往逢凶化吉。"
+            "极弱 (从格)": "日元极弱，无根无助。懂得放下自我执念，顺应局中强旺之神，此乃绝地逢生之象。能随遇而安，乘势而上，往往逢凶化吉。",
+            "极弱 (假从/破格)": "日元极弱，但局中仍有微弱生扶之气。人生多经历磨砺与考验，需在逆境中学会隐忍，一旦逢时来运转，便能爆发出惊人能量。"
         };
 
-        // ====== 核心推演算法区 ======
+        const yongShenDesc = {
+            "木": "<strong>【五行主喜木】 东方升发生机。</strong>木气主仁厚条达，有利从文、策划或创意。建议培养随和柔韧之心，常穿青绿服饰，亲近林木芳华之境，必定遇强则强，事业抽枝散叶。",
+            "火": "<strong>【五行主喜火】 南方热情礼仪。</strong>火气主动力和感化，极具辐射效应。多行光明正大之举，广交热情智士，着衣可佩红紫暖色，保持高昂心绪自能催旺正能量驱邪避祟。",
+            "土": "<strong>【五行主喜土】 中央包容守信。</strong>土主信义且蕴藏根基。无论身居何方，以立足根本踏实打拼最为吉利。适合用大地咖黄色调穿搭，凡事不急不躁，必得深厚土壤蕴养出绝大成效。",
+            "金": "<strong>【五行主喜金】 西方杀伐决断。</strong>金气为肃穆仗义、除弊割弊之物。若感困顿必需当机立断切勿优柔。色彩选用白金净洁为吉，常炼强健体格，意志如精钢出鞘必劈开逆境迷雾。",
+            "水": "<strong>【五行主喜水】 北方智慧流泽。</strong>水主动流圆融且智慧内敛。生活上善上若水遇挫多懂退避顺滑之道。居留处偏北利才路，善着玄黑幽蓝色衣物，定然通透天地造化如大江长浪绵绵不绝。"
+        };
+
         const wxMap = {
             "甲":"木", "乙":"木", "丙":"火", "丁":"火", "戊":"土", "己":"土", "庚":"金", "辛":"金", "壬":"水", "癸":"水",
             "子":"水", "丑":"土", "寅":"木", "卯":"木", "辰":"土", "巳":"火", "午":"火", "未":"土", "申":"金", "酉":"金", "戌":"土", "亥":"水"
         };
-        const zhiHidden = { "子":"癸", "丑":"己", "寅":"甲", "卯":"乙", "辰":"戊", "巳":"丙", "午":"丁", "未":"己", "申":"庚", "酉":"辛", "戌":"戊", "亥":"壬" };
-
-        function getTenGodInfo(dayGan, targetGan) {
-            const elements = {"甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水"};
-            const polarities = {"甲":1,"乙":0,"丙":1,"丁":0,"戊":1,"己":0,"庚":1,"辛":0,"壬":1,"癸":0};
-            const relMap = {
-                "木木": [0, 1], "木火": [2, 3], "木土": [4, 5], "木金":[6, 7], "木水": [8, 9],
-                "火火":[0, 1], "火土": [2, 3], "火金": [4, 5], "火水":[6, 7], "火木": [8, 9],
-                "土土":[0, 1], "土金": [2, 3], "土水":[4, 5], "土木": [6, 7], "土火": [8, 9],
-                "金金": [0, 1], "金水": [2, 3], "金木":[4, 5], "金火": [6, 7], "金土":[8, 9],
-                "水水": [0, 1], "水木":[2, 3], "水火":[4, 5], "水土": [6, 7], "水金": [8, 9]
-            };
-            const names =["建禄格", "羊刃格", "食神格", "伤官格", "偏财格", "正财格", "七杀格", "正官格", "偏印格", "正印格"];
-            const rawTypes =["比劫","比劫","食伤","食伤","财星","财星","官杀","官杀","印星","印星"];
-            let e1 = elements[dayGan], e2 = elements[targetGan];
-            let p1 = polarities[dayGan], p2 = polarities[targetGan];
-            let index = relMap[e1 + e2][p1 === p2 ? 0 : 1];
-            return { name: names[index], type: rawTypes[index], e: e2 };
-        }
-
-        // 精密八字格局与强弱分析算法
-        function analyzeBazi(baZi) {
-            const dG = baZi.getDayGan(), dZ = baZi.getDayZhi();
-            const yG = baZi.getYearGan(), yZ = baZi.getYearZhi();
-            const mG = baZi.getMonthGan(), mZ = baZi.getMonthZhi();
-            const tG = baZi.getTimeGan(), tZ = baZi.getTimeZhi();
-            
-            const dmElem = wxMap[dG];
-            // 计算生扶日主的五行（印星为生，比劫为同）
-            const supportElems = dmElem === "木" ? ["水", "木"] : dmElem === "火" ? ["木", "火"] : dmElem === "土" ? ["火", "土"] : dmElem === "金" ?["土", "金"] : ["金", "水"];
-            
-            // 经典五行权重比赋分(满分100): 月支(40), 日支(15), 时支(10), 年支(10), 月干(10), 时干(10), 年干(5)
-            let score = 0;
-            const baziChars =[
-                { char: mZ, weight: 40 }, { char: dZ, weight: 15 }, { char: tZ, weight: 10 }, { char: yZ, weight: 10 },
-                { char: mG, weight: 10 }, { char: tG, weight: 10 }, { char: yG, weight: 5 }
-            ];
-            
-            let elementsCount = { "木":0, "火":0, "土":0, "金":0, "水":0 };
-            elementsCount[dmElem] += 1; // 日主本身计入统计但不算分
-
-            baziChars.forEach(item => {
-                let e = wxMap[item.char];
-                elementsCount[e] += 1;
-                if(supportElems.includes(e)) score += item.weight;
-            });
-
-            // 1. 判断强弱与极值
-            let strengthTag = "";
-            let isZhuanWang = false, isCong = false;
-
-            if(score >= 80) { strengthTag = "极强 (专旺)"; isZhuanWang = true; }
-            else if(score <= 18) { strengthTag = "极弱 (从格)"; isCong = true; }
-            else if(score >= 48) { strengthTag = "身强"; }
-            else { strengthTag = "身弱"; }
-
-            // 2. 取正格 (以月令本气为主干经典取格法)
-            let mainQi = zhiHidden[mZ] || "甲";
-            let zhengGeInfo = getTenGodInfo(dG, mainQi);
-            let zhengGe = zhengGeInfo.name;
-
-            // 3. 取变格/外格 (精准古典逻辑)
-            let waiGe = "清粹中和格"; 
-            let dayGZ = dG + dZ;
-            
-            // 魁罡查法
-            if(["庚辰", "庚戌", "戊戌", "壬辰"].includes(dayGZ)) {
-                waiGe = "魁罡格";
-            } else if (isZhuanWang) {
-                // 五行专旺格局
-                if(dmElem === "木") waiGe = "曲直格";
-                else if(dmElem === "火") waiGe = "炎上格";
-                else if(dmElem === "土") waiGe = "稼穑格";
-                else if(dmElem === "金") waiGe = "从革格";
-                else if(dmElem === "水") waiGe = "润下格";
-                else waiGe = "从旺格";
-            } else if (isCong) {
-                // 找出最强的克泄耗神来判定从什么
-                let maxE = "", maxV = -1;
-                for(let k in elementsCount) {
-                    if(!supportElems.includes(k) && elementsCount[k] > maxV) { maxV = elementsCount[k]; maxE = k; }
-                }
-                // 通过十神分类
-                if(maxE) {
-                    let type = getTenGodInfo(dG, zhiHidden[Object.keys(wxMap).find(k=>wxMap[k]===maxE)] || "甲").type;
-                    if(type === "财星") waiGe = "从财格";
-                    else if(type === "官杀") waiGe = "从杀格";
-                    else waiGe = "从弱格";
-                } else {
-                    waiGe = "从弱格";
-                }
-            } else {
-                // 组合外格: 提取局中存在的其他十神大类
-                let typesInBazi = new Set();
-                baziChars.forEach(item => {
-                    let tg = zhiHidden[item.char] || item.char; // 转天干
-                    if("甲乙丙丁戊己庚辛壬癸".includes(tg)) {
-                        typesInBazi.add(getTenGodInfo(dG, tg).type);
-                    }
-                });
-                if(typesInBazi.has("官杀") && typesInBazi.has("印星")) waiGe = "官印相生格";
-                else if(typesInBazi.has("食伤") && typesInBazi.has("财星")) waiGe = "食神生财格";
-                else if(typesInBazi.has("食伤") && typesInBazi.has("官杀")) waiGe = "食神制杀格";
-                else if(typesInBazi.has("伤官") && typesInBazi.has("印星")) waiGe = "伤官佩印格";
-            }
-
-            return { zhengGe, waiGe, strengthTag };
-        }
-
-        // ====== 完整无阉割版 64卦 顶级数据库 ======
-        const trigramYao = { 1:[1,1,1], 2:[1,1,0], 3:[1,0,1], 4:[1,0,0], 5:[0,1,1], 6:[0,1,0], 7:[0,0,1], 8:[0,0,0] };
+        const zhiHiddenAdv = {
+            "子":["癸"], "丑": ["己", "癸", "辛"], "寅":["甲", "丙", "戊"], "卯":["乙"], "辰":["戊", "乙", "癸"], "巳":["丙", "戊", "庚"],
+            "午":["丁", "己"], "未":["己", "丁", "乙"], "申":["庚", "壬", "戊"], "酉":["辛"], "戌":["戊", "辛", "丁"], "亥": ["壬", "甲"]
+        };
+        const zhiMainQi = { "子":"癸", "丑":"己", "寅":"甲", "卯":"乙", "辰":"戊", "巳":"丙", "午":"丁", "未":"己", "申":"庚", "酉":"辛", "戌":"戊", "亥":"壬" };
         
+        const wsMapByDM = {
+            "木": { "比劫":"木", "食伤":"火", "财星":"土", "官杀":"金", "印星":"水" },
+            "火": { "比劫":"火", "食伤":"土", "财星":"金", "官杀":"水", "印星":"木" },
+            "土": { "比劫":"土", "食伤":"金", "财星":"水", "官杀":"木", "印星":"火" },
+            "金": { "比劫":"金", "食伤":"水", "财星":"木", "官杀":"火", "印星":"土" },
+            "水": { "比劫":"水", "食伤":"木", "财星":"火", "官杀":"土", "印星":"金" }
+        };
+
+        const trigramYao = { 1:[1,1,1], 2:[1,1,0], 3:[1,0,1], 4:[1,0,0], 5:[0,1,1], 6:[0,1,0], 7:[0,0,1], 8:[0,0,0] };
+
+        //[重要核实: 全备无任何删减 64卦数据源集完全再呈现，确保程序不死不崩！]
         const hexData = {
             "1-1": { n:"乾为天", c:"天行健，君子以自强不息。六爻皆阳，至刚至健，元亨利贞。", p:"<strong>【创世者原型】</strong>极具领导力与开创精神，自我驱动力极高。面对逆境具备极强的反脆弱性，天生适合在充满挑战的领域担任决策者。需警惕过度自我导致的孤独感。" },
             "1-2": { n:"天泽履", c:"上天下泽，君子以辨上下，定民志。履虎尾，不咥人，亨。", p:"<strong>【外交家原型】</strong>深谙人情世故与社交边界感。外表柔和谦逊，内心却极有主见与底线。能够在危险或高压的环境中游刃有余，是以柔克刚的典范。" },
@@ -504,7 +467,7 @@
             "2-3": { n:"泽火革", c:"泽中有火，君子以治历明时。顺天应人，变革创新，悔亡。", p:"<strong>【革新者原型】</strong>求新求变，具有破旧立新的勇气。不满足于一成不变的生活，时代的每一次剧变都是你乘风破浪的最佳舞台。" },
             "2-4": { n:"泽雷随", c:"泽中有雷，君子以向晦入宴息。顺应时势，从善如流，元亨利贞。", p:"<strong>【顺流者原型】</strong>适应力极强，平易近人。不钻牛角尖，懂得顺水推舟，这种松弛感能让你在不知不觉中获得众人的追随与支持。" },
             "2-5": { n:"泽风大过", c:"泽灭木，君子以独立不惧。栋桡之危，才华超群，利有攸往。", p:"<strong>【超凡者原型】</strong>能力拔尖，常担重任。行事风格特立独行，敢于承担常人不敢承担的风险，注定要在人生中成就一番非凡的“大过”之事。" },
-            "2-6": { n:"泽水困", c:"泽无水，君子以致命遂志。身处困境，坚守底线，有言不信。", p:"<strong>【坚韧者原型】</strong>抗压能力惊人。早年可能经历资源的匮乏或环境的压抑，但这种困境会锻造出你钢铁般的意志，大器晚成，绝地反击。" },
+            "2-6": { n:"泽水困", c:"泽无水，君子以致命遂志。身处困境，坚守底线，有言不信。", p:"<strong>【坚韧者原型】</strong>抗压能力惊人。早年可能经历资源的匮乏或环境的压抑，但这种困境会锻造出机钢铁般的意志，大器晚成，绝地反击。" },
             "2-7": { n:"泽山咸", c:"山上有泽，君子以虚受人。心有灵犀，互相感应，取女吉。", p:"<strong>【共情者原型】</strong>直觉极其敏锐，感情丰富细腻。能够瞬间洞察他人的情绪波动，极具个人魅力与艺术感染力，天生具备治愈他人的力量。" },
             "2-8": { n:"泽地萃", c:"泽上于地，君子以除戎器。精英荟萃，繁荣聚集，利见大人。", p:"<strong>【聚核者原型】</strong>具有强大的磁场与魅力。如同水流汇聚，能够轻松吸引优秀的人才与财富向自己靠拢。极具商业头脑与组织调配能力。" },
             "3-1": { n:"火天大有", c:"火在天上，君子以遏恶扬善。如日中天，顺天依时，元亨。", p:"<strong>【丰盛者原型】</strong>气场强大，福气深厚。自带阳光与感染力，生来具有极高的成就潜力与格局。胸襟开阔，乐于分享，总能吸引贵人相助。" },
@@ -557,6 +520,187 @@
             "8-8": { n:"坤为地", c:"地势坤，君子以厚德载物。含弘光大，品物咸亨，牝马之贞。", p:"<strong>【承载者原型】</strong>极具包容力与同理心。能够敏锐感知他人需求，是团队中不可或缺的支持系统与治愈者，拥有润物细无声的强大后劲。" }
         };
 
+        const xiuData = {
+            "角": { n:"角木蛟", d:"东方青龙", e:"木", a:"蛟", desc:"角宿乃东方青龙之角，主春生之气。为人不屈不挠，极具威仪与上进心，天生带有令人折服的领导气场与造化万物之功。" },
+            "亢": { n:"亢金龙", d:"东方青龙", e:"金", a:"龙", desc:"亢宿乃青龙之颈，性刚而有威。处事果断刚烈，刚正不阿。具有极强的爆发力与不可侵犯的贵气，往往不怒自威。" },
+            "氐": { n:"氐土貉", d:"东方青龙", e:"土", a:"貉", desc:"氐宿乃青龙之胸，蕴含宽厚之气。外表温和随性，内心却极具城府与韧性，善于谋略，能容常人难容之事。" },
+            "房": { n:"房日兔", d:"东方青龙", e:"火", a:"兔", desc:"房宿乃青龙之腹，为消化吸收之所。天生具有极强的学习与吸纳能力，性格灵动敏捷，精力充沛，颇具桃花之魅力。" },
+            "心": { n:"心月狐", d:"东方青龙", e:"火", a:"狐", desc:"心宿乃青龙之明堂，主宰心智。极度聪明睿智，心思极其细腻敏锐，深谙人情世故，具有令人沉醉的个人魅力。" },
+            "尾": { n:"尾火虎", d:"东方青龙", e:"火", a:"虎", desc:"尾宿乃青龙之尾，主扫荡群邪。性格威猛不屈，雷厉风行，做事极具决断力与魄力，天生具备破局者的威严。" },
+            "箕": { n:"箕水豹", d:"东方青龙", e:"水", a:"豹", desc:"箕宿乃青龙之尾末，如旋风般迅猛。行动力极强，热爱自由，不喜受人约束。能够在动荡之中敏锐捕捉战机。" },
+            "斗": { n:"斗木獬", d:"北方玄武", e:"木", a:"獬", desc:"斗宿乃玄武之首，如利刃出鞘。刚毅不屈，极具正义感。才华横溢且不惧强权，适合在动荡中主持大局。" },
+            "牛": { n:"牛金牛", d:"北方玄武", e:"金", a:"牛", desc:"牛宿乃玄武之颈，沉稳且坚定。性格极其坚韧，脚踏实地。不图虚名，能够在逆境中凭借惊人的耐力走向大成。" },
+            "女": { n:"女土蝠", d:"北方玄武", e:"土", a:"蝠", desc:"女宿乃玄武之身，隐秘而深邃。洞察力惊人，行事低调内敛，善于在暗处掌控全局。心思缜密，几乎不露破绽。" },
+            "虚": { n:"虚日鼠", d:"北方玄武", e:"火", a:"鼠", desc:"虚宿乃玄武之腹，主空灵与智慧。思维天马行空，悟性极高。带有强烈的理想主义色彩，不慕名利，向往绝对的自由。" },
+            "危": { n:"危月燕", d:"北方玄武", e:"火", a:"燕", desc:"危宿乃玄武之脊，居高临下。天性机敏骄傲，适应力极强。犹如飞燕穿云，总能在险恶的环境中绝地逢生，逢凶化吉。" },
+            "室": { n:"室火猪", d:"北方玄武", e:"火", a:"猪", desc:"室宿乃玄武之宫室，主安固与丰足。性格宽厚包容，自带福泽与安定的气场。是人群中的定海神针，总能给人带来安全感。" },
+            "壁": { n:"壁水貐", d:"北方玄武", e:"水", a:"貐", desc:"壁宿乃玄武之壁垒，主防御与守持。极其内敛且防备心强，但一旦认定目标，便会形成坚不可摧的壁垒。极具学术精神。" },
+            "奎": { n:"奎木狼", d:"西方白虎", e:"木", a:"狼", desc:"奎宿乃白虎之首，主肃杀与开创。性格刚烈豪迈，具有极强的野性与战斗力。面对挑战从不退缩，是天生的征服者。" },
+            "娄": { n:"娄金狗", d:"西方白虎", e:"金", a:"狗", desc:"娄宿乃白虎之颈，忠诚而敏锐。极具警觉性与责任心，爱憎分明。对认定的事物具有钢铁般的契约精神，是不可多得的良伴。" },
+            "胃": { n:"胃土雉", d:"西方白虎", e:"土", a:"雉", desc:"胃宿乃白虎之腹，主丰盛与消化。性格沉稳厚重，才华内敛而不张扬。能够极佳地整合各种资源，将危机化作养分。" },
+            "昴": { n:"昴日鸡", d:"西方白虎", e:"火", a:"鸡", desc:"昴宿乃白虎之目，明察秋毫。眼光极其毒辣，直觉极度敏锐。能够一眼看破事物的本质，气质高洁，极具才子佳人之风范。" },
+            "毕": { n:"毕月乌", d:"西方白虎", e:"火", a:"乌", desc:"毕宿乃白虎之口，主雄辩与威慑。口才极佳，言辞极具感染力与穿透力。往往能够凭借超凡的沟通能力成就一番大业。" },
+            "觜": { n:"觜火猴", d:"西方白虎", e:"火", a:"猴", desc:"觜宿乃白虎之毛，极其机警聪慧。思维敏捷多变，适应力惊人。不按常理出牌，总能在复杂的局势中找到最巧妙的破局点。" },
+            "参": { n:"参水猿", d:"西方白虎", e:"水", a:"猿", desc:"参宿乃白虎之肩，主灵动与多才。才华横溢，精力极其旺盛。具有强烈的表演欲与艺术天赋，一生经历往往丰富多彩。" },
+            "井": { n:"井木犴", d:"南方朱雀", e:"木", a:"犴", desc:"井宿乃朱雀之冠，主水源与清澈。内心极其纯粹清高，具有极高的道德标准。如同一口清冽之井，能源源不断滋养他人。" },
+            "鬼": { n:"鬼金羊", d:"南方朱雀", e:"金", a:"羊", desc:"鬼宿乃朱雀之目，深邃且神秘。直觉与灵性极强，带有强烈的悟性色彩。外表温和，内心却极具穿透力，能看破人心。" },
+            "柳": { n:"柳土獐", d:"南方朱雀", e:"土", a:"獐", desc:"柳宿乃朱雀之颈，性情温和而柔韧。如同柳枝般能屈能伸，适应力极强。具有极佳的同理心，一生多得贵人怜惜与扶持。" },
+            "星": { n:"星日马", d:"南方朱雀", e:"火", a:"马", desc:"星宿乃朱雀之心脏，充满光热。热情如火，精力永远充沛。具有极强的行动力与号召力，人生轨迹如同流星般耀眼夺目。" },
+            "张": { n:"张月鹿", d:"南方朱雀", e:"火", a:"鹿", desc:"张宿乃朱雀之嗉，主开张与繁华。气质极其优雅高贵，极具审美天赋。喜欢体面而丰盛的生活，一生极易获得名望与财富。" },
+            "翼": { n:"翼火蛇", d:"南方朱雀", e:"火", a:"蛇", desc:"翼宿乃朱雀之羽翼，主飞跃与神秘。思维缜密，性格外冷内热。具有极强的隐藏能力与爆发力，一旦展翅，必定一飞冲天。" },
+            "轸": { n:"轸水蚓", d:"南方朱雀", e:"水", a:"蚓", desc:"轸宿乃朱雀之尾，主运转与收束。心思细腻，行事极其周密严谨。如同车轮之转轴，虽不张扬，却能稳固地推动庞大体系运转。" }
+        };
+
+        function getTenGodInfo(dayGan, targetGan) {
+            const elements = {"甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水"};
+            const polarities = {"甲":1,"乙":0,"丙":1,"丁":0,"戊":1,"己":0,"庚":1,"辛":0,"壬":1,"癸":0};
+            const relMap = {
+                "木木":[0,1], "木火":[2,3], "木土": [4,5], "木金":[6,7], "木水":[8,9],
+                "火火":[0,1], "火土":[2,3], "火金": [4,5], "火水":[6,7], "火木":[8,9],
+                "土土":[0,1], "土金":[2,3], "土水":[4,5], "土木":[6,7], "土火":[8,9],
+                "金金":[0,1], "金水":[2,3], "金木":[4,5], "金火":[6,7], "金土":[8,9],
+                "水水":[0,1], "水木":[2,3], "水火":[4,5], "水土":[6,7], "水金":[8,9]
+            };
+            const names =["建禄格", "羊刃格", "食神格", "伤官格", "偏财格", "正财格", "七杀格", "正官格", "偏印格", "正印格"];
+            const rawTypes =["比劫","比劫","食伤","食伤","财星","财星","官杀","官杀","印星","印星"];
+            let e1 = elements[dayGan], e2 = elements[targetGan];
+            let p1 = polarities[dayGan], p2 = polarities[targetGan];
+            let index = relMap[e1 + e2][p1 === p2 ? 0 : 1];
+            return { name: names[index], type: rawTypes[index], e: e2 };
+        }
+
+        // 精密推演分析，绝对留底心血保留算法
+        function analyzeBazi(baZi) {
+            const dG = baZi.getDayGan(), dZ = baZi.getDayZhi();
+            const yG = baZi.getYearGan(), yZ = baZi.getYearZhi();
+            const mG = baZi.getMonthGan(), mZ = baZi.getMonthZhi();
+            const tG = baZi.getTimeGan(), tZ = baZi.getTimeZhi();
+            
+            const dmElem = wxMap[dG];
+            const supportElems = dmElem === "木" ?["水", "木"] : dmElem === "火" ?["木", "火"] : dmElem === "土" ? ["火", "土"] : dmElem === "金" ?["土", "金"] :["金", "水"];
+            
+            const baziChars =[
+                { char: mZ, weight: 40, isZhi: true }, { char: dZ, weight: 15, isZhi: true }, 
+                { char: tZ, weight: 10, isZhi: true }, { char: yZ, weight: 10, isZhi: true },
+                { char: mG, weight: 10, isZhi: false }, { char: tG, weight: 10, isZhi: false }, { char: yG, weight: 5, isZhi: false }
+            ];
+            
+            let score = 0; 
+            let tgWeights = { "比劫": 0, "食伤": 0, "财星": 0, "官杀": 0, "印星": 0 };
+            
+            baziChars.forEach(item => {
+                let e = wxMap[item.char];
+                if(supportElems.includes(e)) score += item.weight;
+                let tg = item.isZhi ? zhiMainQi[item.char] : item.char;
+                if ("甲乙丙丁戊己庚辛壬癸".includes(tg)) {
+                    let tgInfo = getTenGodInfo(dG, tg);
+                    tgWeights[tgInfo.type] += item.weight; 
+                }
+            });
+
+            // 正格提法
+            let zhengGe = "正格不显";
+            let monthHidden = zhiHiddenAdv[mZ];
+            let otherStems =[yG, mG, tG];
+            let revealedStem = null;
+            for (let i = 0; i < monthHidden.length; i++) {
+                if (otherStems.includes(monthHidden[i])) { revealedStem = monthHidden[i]; break; }
+            }
+            if (revealedStem) {
+                let info = getTenGodInfo(dG, revealedStem);
+                if (info.type !== "比劫") zhengGe = info.name;
+            }
+            if (zhengGe === "正格不显") {
+                let mainQiInfo = getTenGodInfo(dG, zhiMainQi[mZ]);
+                if (mainQiInfo.type === "比劫") zhengGe = mainQiInfo.name; 
+            }
+
+            // 外格判定及最高优先两素提炼神格定位法
+            let strengthTag = "", waiGe = "无显著外格"; 
+            let primaryGod = "", secondaryGod = "";
+
+            if (score >= 85 && (tgWeights["财星"] + tgWeights["官杀"] <= 5)) { 
+                strengthTag = "极强 (专旺)"; 
+                primaryGod = "比劫"; secondaryGod = "印星"; 
+                if (dmElem === "木") waiGe = "曲直格"; else if (dmElem === "火") waiGe = "炎上格";
+                else if (dmElem === "土") waiGe = "稼穑格"; else if (dmElem === "金") waiGe = "从革格";
+                else if (dmElem === "水") waiGe = "润下格"; else waiGe = "专旺格";
+
+            } else if (score <= 15) {
+                if (score > 5) {
+                    strengthTag = "极弱 (假从/破格)";
+                    waiGe = (tgWeights["印星"] >= tgWeights["比劫"]) ? "印星破格" : "比劫破格";
+                    if (tgWeights["官杀"] >= 15) { primaryGod = "印星"; secondaryGod = "比劫"; } 
+                    else { primaryGod = "比劫"; secondaryGod = "印星"; }
+                } else {
+                    strengthTag = "极弱 (从格)"; 
+                    let maxTg = "", maxW = -1;
+                    for (let k in tgWeights) { if (k !== "比劫" && k !== "印星" && tgWeights[k] > maxW) { maxW = tgWeights[k]; maxTg = k; } }
+                    if (maxTg === "财星") { waiGe = "从财格"; primaryGod = "财星"; secondaryGod = "食伤"; } 
+                    else if (maxTg === "官杀") { waiGe = "从杀格"; primaryGod = "官杀"; secondaryGod = "财星"; }
+                    else if (maxTg === "食伤") { waiGe = "从儿格"; primaryGod = "食伤"; secondaryGod = "财星"; } 
+                    else { waiGe = "从势格"; primaryGod = "财星"; secondaryGod = "食伤"; }
+                }
+            } else {
+                if (score >= 45) {
+                    strengthTag = "身强";
+                    if (tgWeights["食伤"] >= 15 && tgWeights["食伤"] > tgWeights["官杀"]) { waiGe = "食伤泄秀"; }
+                    if (tgWeights["比劫"] > tgWeights["印星"]) { primaryGod = "官杀"; secondaryGod = "财星"; } 
+                    else { primaryGod = "财星"; secondaryGod = "食伤"; }
+                } else { 
+                    strengthTag = "身弱"; 
+                    if (tgWeights["官杀"] >= 15) { primaryGod = "印星"; secondaryGod = "比劫"; } 
+                    else { primaryGod = "比劫"; secondaryGod = "印星"; }
+                }
+                let dayGZ = dG + dZ;
+                if (["庚辰", "庚戌", "戊戌", "壬辰"].includes(dayGZ) && waiGe === "无显著外格") waiGe = "魁罡格";
+            }
+
+            let godResultList =[ { e: wsMapByDM[dmElem][primaryGod], g: primaryGod, r: "用神" } ];
+            if(primaryGod !== secondaryGod && wsMapByDM[dmElem][primaryGod] !== wsMapByDM[dmElem][secondaryGod]) {
+                godResultList.push({ e: wsMapByDM[dmElem][secondaryGod], g: secondaryGod, r: "喜神" });
+            }
+
+            return { zhengGe, waiGe, strengthTag, godResultList };
+        }
+
+        // ====== 绝妙高清古建 28 图星几何阵矩阵网络 (严卡您所求古风原片设计稿完美重合) ======
+        const xiuDrawMap = {
+            // 东方
+            "角": { s: [[25,50], [75,50]], l: [[0,1]] }, 
+            "亢": { s: [[25,40], [45,60], [65,60],[85,40]], l: [[0,1],[1,2],[2,3]] }, 
+            "氐": { s: [[35,35], [65,35],[65,65], [35,65]], l: [[0,1],[1,2],[2,3],[3,0]] }, 
+            "房": { s: [[20,50],[45,65], [65,65], [90,50]], l: [[0,1],[1,2],[2,3]] }, 
+            "心": { s: [[25,35], [45,65], [75,80]], l: [[0,1],[1,2]] }, 
+            "尾": { s: [[80,25], [65,35],[60,50], [60,65], [50,80],[35,85], [20,70], [30,55], [50,55]], l: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8]] }, 
+            "箕": { s: [[30,25], [45,65],[75,70], [85,25]], l: [[0,1],[1,2],[2,3]] }, 
+            // 北方
+            "斗": { s: [[40,25], [65,35], [75,55], [60,75], [40,65], [35,45]], l: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,2]] },
+            "牛": { s: [[50,25], [50,55], [50,85],[30,45], [70,45], [30,70]], l: [[0,1],[1,2],[3,1],[4,1],[2,5]] },
+            "女": { s: [[65,30], [40,55], [65,75], [60,95]], l: [[0,1],[1,2],[2,3]] },
+            "虚": { s: [[50,30], [50,75]], l: [[0,1]] },
+            "危": { s: [[30,30], [65,55], [35,80]], l: [[0,1],[1,2]] },
+            "室": { s: [[50,20],[50,45], [25,45], [75,45],[50,70], [50,90]], l: [[0,1],[1,2],[1,3],[1,4],[4,5]] }, 
+            "壁": { s: [[50,25], [50,85]], l: [[0,1]] },
+            // 西方
+            "奎": { s: [[35,35], [50,30],[70,30], [80,45], [85,60], [80,75], [60,85],[40,85], [25,70], [15,55]], l: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,0]] }, 
+            "娄": { s: [[35,35], [55,60], [75,30]], l: [[0,1],[1,2]] },
+            "胃": { s: [[35,40],[50,65], [65,40]], l: [[0,1],[1,2]] },
+            "昴": { s: [[50,25], [35,40], [65,40],[35,65], [65,65], [50,85]], l: [[0,1],[0,2],[1,2],[1,3],[2,4],[3,5],[4,5]] }, 
+            "毕": { s: [[30,55], [15,80],[45,85], [50,55], [70,30],[90,70], [70,85]], l: [[0,3],[1,3],[2,3],[3,4],[3,5],[3,6]] }, 
+            "觜": { s: [[45,40],[60,55], [35,65]], l: [[0,1],[1,2],[2,0]] }, 
+            "参": { s: [[25,25],[75,25], [45,50], [50,50], [55,50],[30,85], [70,85]], l: [[0,3],[1,3],[2,3],[4,3],[5,3],[6,3],[0,1]] }, 
+            // 南方
+            "井": { s: [[35,25], [65,25], [35,50], [65,50], [35,75], [65,75]], l: [[0,2],[2,4],[1,3],[3,5],[0,1],[2,3],[4,5]] }, 
+            "鬼": { s: [[50,25],[30,45], [70,45], [50,65], [50,45]], l: [[4,0],[4,1],[4,2],[4,3],[0,1],[1,3],[3,2],[2,0]] }, 
+            "柳": { s: [[80,45], [65,40], [55,50], [40,55], [25,65], [50,75], [65,80], [55,95]], l: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]] }, 
+            "星": { s: [[50,20], [65,40],[50,60], [35,40], [50,75], [50,95]], l: [[0,1],[1,2],[2,3],[3,0],[2,4],[4,5]] },
+            "张": { s: [[40,30], [60,40], [50,65],[30,55], [80,60], [90,40]], l: [[0,1],[1,2],[2,3],[3,0],[1,4],[4,5]] },
+            "翼": { s: [[35,30], [60,30], [25,45],[50,45], [75,55], [30,60], [50,70],[70,65], [35,85], [65,85]], l: [[0,1],[2,3],[3,4],[5,6],[6,7],[8,9],[0,2],[2,5],[5,8],[1,3],[3,6],[6,9]] },
+            "轸": { s: [[35,45],[65,30], [80,60], [50,85], [40,25]], l: [[0,1],[1,2],[2,3],[3,0],[1,4]] }
+        };
+
+        // ==== 生命周期域 ======
         let historyData =[];
 
         window.onload = () => {
@@ -586,6 +730,33 @@
             document.getElementById('lunar-options').style.display = (mode === 'lunar') ? 'flex' : 'none';
         }
         switchTab('solar');
+
+        function drawXiuConstellation(xiuChar) {
+            const xd = xiuDrawMap[xiuChar] || { s: [[25,50], [75,50]], l: [[0,1]] }; 
+            let svgHtml = `<svg viewBox="0 0 100 110" width="100%" height="100%">`;
+            xd.l.forEach(pair => {
+                let [i,j] = pair;
+                svgHtml += `<line x1="${xd.s[i][0]}" y1="${xd.s[i][1]}" x2="${xd.s[j][0]}" y2="${xd.s[j][1]}" class="xiu-line" />`;
+            });
+            xd.s.forEach(pt => {
+                svgHtml += `<circle cx="${pt[0]}" cy="${pt[1]}" r="3.5" class="xiu-star" />`;
+                svgHtml += `<circle cx="${pt[0]}" cy="${pt[1]}" r="8" class="xiu-star-glow" />`;
+            });
+            svgHtml += `</svg>`;
+            return svgHtml;
+        }
+
+        // 月建首宿追元决！绝度无敌的宿度
+        function getTraditionalXiuYao(lunarMonth, lunarDay) {
+            const xiuArr =["角","亢","氐","房","心","尾","箕", "斗","牛","女","虚","危","室","壁", "奎","娄","胃","昴","毕","觜","参", "井","鬼","柳","星","张","翼","轸"];
+            const monthStartIdx = {
+                1: 12, 2: 14, 3: 16, 4: 18, 5: 20, 6: 22,
+                7: 25, 8: 0,  9: 2,  10: 4, 11: 7, 12: 10
+            };
+            const targetM = Math.abs(lunarMonth); 
+            let startBase = monthStartIdx[targetM] || 0;
+            return xiuArr[(startBase + lunarDay - 1) % 28];
+        }
 
         function calculateBazi(isFromHistory = false) {
             const name = document.getElementById('in-name').value.trim() || "无名居士";
@@ -634,7 +805,6 @@
             document.getElementById('d-nayin').innerText = baZi.getDayNaYin();
             document.getElementById('t-nayin').innerText = baZi.getTimeNaYin();
 
-            // === 精准命理格局剖析 ===
             const baziAnalysis = analyzeBazi(baZi);
             let dayGan = baZi.getDayGan();
             
@@ -643,26 +813,62 @@
             document.getElementById('geju-outer-tag').innerText = "外格：" + baziAnalysis.waiGe;
             document.getElementById('geju-strength-tag').innerText = "强弱：" + baziAnalysis.strengthTag;
             
-            // 拼接优美的命理剖析描述
             let descHtml = `<strong>【正格 · ${baziAnalysis.zhengGe}】</strong><br/>${zhengGeData[baziAnalysis.zhengGe] || "格局清雅，中和为贵。"}<br/><br/>`;
             descHtml += `<strong>【外格 · ${baziAnalysis.waiGe}】</strong><br/>${waiGeData[baziAnalysis.waiGe] || "五行流转，和顺通达。"}<br/><br/>`;
             descHtml += `<strong>【日主强弱 · ${baziAnalysis.strengthTag}】</strong><br/>${strengthData[baziAnalysis.strengthTag] || "五行平和，生克得宜。"}`;
-            
             document.getElementById('geju-desc').innerHTML = descHtml;
 
+            let ysTagsHtml = baziAnalysis.godResultList.map(info => 
+                `<span class="ys-tag-item">用神·${info.e} <span class="sub-text">(${info.g})</span></span>`
+            ).join('');
+            
+            let ysDescHtml = baziAnalysis.godResultList.map(info => 
+                `<p>${yongShenDesc[info.e]}</p>`
+            ).join('');
+            
+            document.getElementById('ys-tags').innerHTML = ysTagsHtml;
+            document.getElementById('ys-desc').innerHTML = ysDescHtml;
 
-            // === 梅花易数本命卦起卦 ===
             let up = (lunarDate.getYearZhiIndex() + 1 + Math.abs(lunarDate.getMonth()) + lunarDate.getDay()) % 8 || 8;
             let low = (lunarDate.getYearZhiIndex() + 1 + Math.abs(lunarDate.getMonth()) + lunarDate.getDay() + lunarDate.getTimeZhiIndex() + 1) % 8 || 8;
             
             const hexKey = `${up}-${low}`;
             let hexInfo = hexData[hexKey];
-
             document.getElementById('gua-name').innerText = hexInfo.n;
             document.getElementById('gua-class').innerHTML = hexInfo.c;
             document.getElementById('gua-psych').innerHTML = hexInfo.p;
-
             drawHexagram(up, low);
+
+            let actualLMonth = Math.abs(lunarDate.getMonth()); 
+            let actualLDay = lunarDate.getDay(); 
+            let xiuChar = getTraditionalXiuYao(actualLMonth, actualLDay);
+            let xiuInfo = xiuData[xiuChar];
+            
+            if (xiuInfo) {
+                document.getElementById('xiu-name-main').innerText = xiuInfo.n;
+                document.getElementById('xiu-animal').innerText = `(${xiuInfo.e}${xiuInfo.a})`;
+                document.getElementById('xiu-dir').innerText = xiuInfo.d;
+                document.getElementById('xiu-desc').innerHTML = `『 ${xiuInfo.desc} 』`;
+                
+                const xiuBox = document.getElementById('xiu-svg-box');
+                xiuBox.innerHTML = drawXiuConstellation(xiuChar);
+
+                if(window.xiuObserver) window.xiuObserver.disconnect();
+                window.xiuObserver = new IntersectionObserver((entries) => {
+                    if(entries[0].isIntersecting) {
+                        const lines = xiuBox.querySelectorAll('.xiu-line');
+                        const stars = xiuBox.querySelectorAll('.xiu-star');
+                        const glows = xiuBox.querySelectorAll('.xiu-star-glow');
+                        
+                        lines.forEach((line, idx) => { line.style.animation = `drawXiuLine 1.5s ease forwards ${idx * 0.15}s`; });
+                        stars.forEach((star, idx) => { star.style.animation = `starFadeIn 0.5s forwards ${idx * 0.1}s`; });
+                        glows.forEach((glow, idx) => { glow.style.animation = `glowXiuStar 2s infinite ${idx * 0.3}s`; });
+                        
+                        window.xiuObserver.disconnect();
+                    }
+                }, { threshold: 0.1 }); 
+                window.xiuObserver.observe(xiuBox);
+            }
 
             if(!isFromHistory) {
                 saveHistory({
@@ -671,20 +877,17 @@
                 });
             }
 
-            // === 极美连动效显现 ===
             const resultBox = document.getElementById('result-box');
             resultBox.style.display = 'block';
-            document.getElementById('geju-section').style.display = 'block';
-            document.getElementById('gua-section').style.display = 'block';
+            document.getElementById('xiu-section').style.display = 'block'; 
             
             const pillars = document.querySelectorAll('.pillar-card');
             pillars.forEach(p => { p.style.animation = 'none'; p.style.opacity = '0'; });
-            
             const gejuCard = document.getElementById('geju-card');
             gejuCard.style.animation = 'none';
             gejuCard.style.opacity = '0';
             
-            resultBox.offsetHeight; // 触发重绘
+            resultBox.offsetHeight; 
             
             pillars.forEach((p, idx) => {
                 p.style.animation = `pillarFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) ${idx * 0.15}s forwards`;
@@ -693,12 +896,11 @@
 
             if(!isFromHistory) {
                 setTimeout(() => {
-                    document.getElementById('gua-section').scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }, 500);
+                    resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 400);
             }
         }
 
-        // ====== IntersectionObserver ======
         function drawHexagram(upper, lower) {
             const upYao = trigramYao[upper]; const lowYao = trigramYao[lower];
             const sixYao =[...lowYao, ...upYao]; 
@@ -730,11 +932,10 @@
                     });
                     window.guaObserver.disconnect();
                 }
-            }, { threshold: 0.2 }); 
+            }, { threshold: 0.15 }); 
             window.guaObserver.observe(box);
         }
 
-        // ====== 历史纪要逻辑 ======
         function saveHistory(data) {
             historyData = historyData.filter(item => item.name !== data.name || item.name === '无名居士');
             historyData.unshift(data); 
